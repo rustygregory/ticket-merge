@@ -598,7 +598,7 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
           </AlertWrapper>
         )}
 
-        <FieldLabel>Destination ticket* (Required)</FieldLabel>
+        <FieldLabel>Destination ticket* (required)</FieldLabel>
         <FieldHint>Search for a specific ticket or select a suggested ticket</FieldHint>
         <InputContainer>
           <InputWrapper $error={!!inputError} onClick={() => !selected && inputRef.current?.focus()}>
