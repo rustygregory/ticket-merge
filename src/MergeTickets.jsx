@@ -268,7 +268,7 @@ const SuggestionCard = styled.div`
   border-radius: 8px;
   padding: 16px;
   cursor: pointer;
-  background: ${props => props.$active ? '#edf7ff' : '#fff'};
+  background: ${props => props.$active ? '#edf7ff' : '#f8f9f9'};
   transition: border-color 0.15s, background 0.15s;
   width: 304px;
   height: 100px;
@@ -276,7 +276,7 @@ const SuggestionCard = styled.div`
 
   &:hover {
     border-color: #1f73b7;
-    background: ${props => props.$active ? '#edf7ff' : '#f5faff'};
+    background: ${props => props.$active ? '#edf7ff' : '#f8f9f9'};
   }
 `
 
