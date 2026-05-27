@@ -35,7 +35,7 @@ const Main = styled.main`
     height: 500px;
     background: radial-gradient(circle, rgba(200, 180, 240, 0.25) 0%, rgba(220, 200, 255, 0.1) 40%, transparent 70%);
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
   }
 `
 
