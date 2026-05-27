@@ -157,6 +157,7 @@ const ComposerBody = styled.textarea`
   font-size: 14px;
   font-family: inherit;
   resize: none;
+  color: #2f3941;
   background: ${props => props.$variant === 'note' ? '#fff8ed' : '#fff'};
   box-sizing: border-box;
   flex: 1;
