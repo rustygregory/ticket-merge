@@ -547,7 +547,7 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
         </StepIndicator>
 
         <Title>Merge tickets</Title>
-        <Subtitle>Merge one or more tickets into a ticket you choose or 1 we suggest.</Subtitle>
+        <Subtitle>Consolidate related tickets into a primary or suggested ticket.</Subtitle>
 
         <SectionLabel>Source ticket{sourceTickets.length > 1 ? 's' : ''}</SectionLabel>
         <SourceTicketGrid>
