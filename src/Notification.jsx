@@ -59,7 +59,11 @@ const CloseButton = styled.button`
 `
 
 
-function Notification({ onClose }) {
+function Notification({ ticketCount, onClose }) {
+  const message = ticketCount > 1
+    ? 'Tickets successfully merged'
+    : 'Ticket successfully merged'
+
   return (
     <Wrapper>
       <Toast>
@@ -69,7 +73,7 @@ function Notification({ onClose }) {
             <path d="M6 10l3 3 5-5" stroke="#038153" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </CheckIcon>
-        <Message>Ticket successfully merged</Message>
+        <Message>{message}</Message>
         <CloseButton onClick={onClose}>×</CloseButton>
       </Toast>
     </Wrapper>

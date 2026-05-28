@@ -20,6 +20,7 @@ function App() {
   const [mergeStarted, setMergeStarted] = useState(false)
   const [showNotification, setShowNotification] = useState(false)
   const [mergedTickets, setMergedTickets] = useState([])
+  const [lastMergeCount, setLastMergeCount] = useState(0)
 
   const startMerge = () => {
     setMergeStarted(true)
@@ -34,6 +35,7 @@ function App() {
   }
 
   const completeMerge = () => {
+    setLastMergeCount(selectedTickets.length)
     setMergedTickets(prev => [...prev, ...selectedTickets])
     resetMerge()
     setShowNotification(true)
@@ -80,7 +82,7 @@ function App() {
           </>
         )}
         {showNotification && (
-          <Notification onClose={() => setShowNotification(false)} />
+          <Notification ticketCount={lastMergeCount} onClose={() => setShowNotification(false)} />
         )}
       </Shell>
     </ThemeProvider>
