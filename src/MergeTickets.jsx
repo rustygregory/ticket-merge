@@ -64,7 +64,7 @@ const SectionLabel = styled.h3`
 
 const SourceTicketGrid = styled.div`
   display: grid;
-  grid-template-columns: 272px 272px;
+  grid-template-columns: 1fr;
   gap: 8px;
   margin-bottom: 36px;
 `
@@ -76,7 +76,7 @@ const SourceTicketCard = styled.div`
   border: 1px solid #d8dcde;
   border-radius: 4px;
   padding: 4px 12px 4px 4px;
-  width: 272px;
+  width: 100%;
   height: 28px;
   box-sizing: border-box;
 `
@@ -115,7 +115,6 @@ const FieldHint = styled.p`
 const InputContainer = styled.div`
   position: relative;
   width: 100%;
-  max-width: 430px;
 `
 
 const InputWrapper = styled.div`
@@ -298,7 +297,7 @@ const CardMeta = styled.span`
 const Footer = styled.div`
   border-top: 1px solid #d8dcde;
   background: #fff;
-  padding: 16px 56px;
+  padding: 16px 20px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
