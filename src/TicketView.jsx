@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import MergeModal from './MergeModal'
 
 const Container = styled.div`
   display: flex;
@@ -578,6 +577,173 @@ const CancelButton = styled.button`
   }
 `
 
+const DrawerContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+`
+
+const DrawerTitle = styled.h2`
+  font-size: 18px;
+  font-weight: 500;
+  color: #2f3941;
+  margin: 0 0 6px;
+`
+
+const DrawerSubtitle = styled.p`
+  font-size: 13px;
+  color: #68737d;
+  margin: 0 0 24px;
+`
+
+const DrawerSection = styled.div`
+  margin-bottom: 24px;
+`
+
+const DrawerSectionTitle = styled.h3`
+  font-size: 13px;
+  font-weight: 600;
+  color: #2f3941;
+  margin: 0 0 6px;
+`
+
+const DrawerBadgeRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+`
+
+const DrawerBadge = styled.span`
+  background: #e9ebed;
+  color: #2f3941;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+`
+
+const DrawerHint = styled.p`
+  font-size: 12px;
+  color: #68737d;
+  margin: 0 0 8px;
+`
+
+const DrawerComposer = styled.div`
+  border: 1px solid #d8dcde;
+  border-radius: 8px;
+  overflow: hidden;
+`
+
+const DrawerComposerHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: ${props => props.$variant === 'note' ? '#fff8ed' : '#fff'};
+  cursor: pointer;
+  position: relative;
+  font-size: 13px;
+  color: #2f3941;
+`
+
+const DrawerComposerBody = styled.textarea`
+  width: 100%;
+  min-height: 60px;
+  padding: 0 12px 10px;
+  border: none;
+  outline: none;
+  font-size: 12px;
+  font-family: inherit;
+  resize: none;
+  color: #2f3941;
+  background: ${props => props.$variant === 'note' ? '#fff8ed' : '#fff'};
+  box-sizing: border-box;
+`
+
+const DrawerComposerToolbar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: ${props => props.$variant === 'note' ? '#fff8ed' : '#fff'};
+`
+
+const DrawerToolbarBtn = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #87929d;
+  padding: 0;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: #2f3941;
+  }
+`
+
+const DrawerFooter = styled.div`
+  border-top: 1px solid #d8dcde;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+`
+
+const DrawerBackButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #2f3941;
+  cursor: pointer;
+  padding: 8px 12px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
+
+const DrawerMergeButton = styled.button`
+  background: #2f3941;
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  padding: 8px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: #49545c;
+  }
+`
+
+const DrawerDropdownMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 12px;
+  background: #fff;
+  border: 1px solid #d8dcde;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 140px;
+`
+
+const DrawerDropdownItem = styled.div`
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #2f3941;
+  cursor: pointer;
+
+  &:hover {
+    background: #edf7ff;
+  }
+`
+
 const Footer = styled.div`
   border-top: 1px solid #d8dcde;
   padding: 10px 20px;
@@ -702,9 +868,59 @@ const mergeSuggestions = [
 
 const currentTicket = { id: 23, title: 'Refund merch' }
 
+function DrawerComposerDropdown({ value, onChange }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  const icon = value === 'public' ? (
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#68737d" strokeWidth="1.5">
+      <path d="M4 10l6-6v4c6 0 8 3 8 8-2-3-4-4-8-4v4l-6-6z" strokeLinejoin="round"/>
+    </svg>
+  ) : (
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#68737d" strokeWidth="1.5">
+      <rect x="3" y="3" width="14" height="14" rx="2"/>
+      <path d="M7 7h6M7 10h6M7 13h4"/>
+    </svg>
+  )
+
+  return (
+    <div ref={ref} style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: '6px' }} onClick={() => setOpen(!open)}>
+      {icon}
+      <span>{value === 'public' ? 'Public reply' : 'Internal note'}</span>
+      <svg width="10" height="10" viewBox="0 0 16 16" fill="none">
+        <path d="M4 6l4 4 4-4" stroke="#68737d" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+      {open && (
+        <DrawerDropdownMenu>
+          <DrawerDropdownItem onClick={(e) => { e.stopPropagation(); onChange('public'); setOpen(false); }}>
+            Public reply
+          </DrawerDropdownItem>
+          <DrawerDropdownItem onClick={(e) => { e.stopPropagation(); onChange('internal'); setOpen(false); }}>
+            Internal note
+          </DrawerDropdownItem>
+        </DrawerDropdownMenu>
+      )}
+    </div>
+  )
+}
+
 function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
   const [selectedIds, setSelectedIds] = useState([])
-  const [showModal, setShowModal] = useState(false)
+  const [showDrawer, setShowDrawer] = useState(false)
+  const [closeComment, setCloseComment] = useState('')
+  const [destComment, setDestComment] = useState('')
+  const [closeType, setCloseType] = useState('public')
+  const [destType, setDestType] = useState('internal')
 
   const availableTickets = mergeSuggestions.filter(t => !mergedTicketIds.includes(t.id))
 
@@ -721,17 +937,19 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
   }
 
   const handleMergeClick = () => {
-    setShowModal(true)
+    setCloseComment(`Merged into #${currentTicket.id} ${currentTicket.title}. This ticket is now closed.`)
+    setDestComment(`This ticket now includes merged content from ${selectedIds.map(id => `#${id}`).join(', ')}.`)
+    setShowDrawer(true)
   }
 
   const handleMergeConfirm = () => {
-    setShowModal(false)
+    setShowDrawer(false)
     onMergeComplete(selectedIds)
     setSelectedIds([])
   }
 
-  const handleModalClose = () => {
-    setShowModal(false)
+  const handleDrawerBack = () => {
+    setShowDrawer(false)
   }
 
   return (
@@ -982,73 +1200,138 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
 
         <RightSection>
           <SidePanel>
-            <SidePanelContent>
-              <SectionHeader>
-                <SectionTitle>
-                  Merge suggestions
-                  {availableTickets.length > 0 && <CountBadge>{availableTickets.length}</CountBadge>}
-                </SectionTitle>
-                <CollapseButton>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#68737d" strokeWidth="1.5">
-                    <path d="M4 10l4-4 4 4" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </CollapseButton>
-              </SectionHeader>
+            {showDrawer ? (
+              <>
+                <DrawerContent>
+                  <DrawerTitle>Review merge</DrawerTitle>
+                  <DrawerSubtitle>Review and add comments before merging.</DrawerSubtitle>
 
-              {availableTickets.length > 0 ? (
-                <>
-                  <SectionDescription>
-                    Review recent unresolved tickets from the same requester to merge into this ticket.
-                  </SectionDescription>
-                  <TicketList>
-                    {availableTickets.map(ticket => (
-                      <TicketItem key={ticket.id}>
-                        <Checkbox
-                          type="checkbox"
-                          checked={selectedIds.includes(ticket.id)}
-                          onChange={() => toggleTicket(ticket.id)}
-                        />
-                        <StatusDot>O</StatusDot>
-                        <TicketInfo>
-                          <TicketItemTitle>{ticket.title}</TicketItemTitle>
-                          <TicketSubtitle>{ticket.subtitle}</TicketSubtitle>
-                          <TicketDate>{ticket.date}</TicketDate>
-                        </TicketInfo>
-                      </TicketItem>
-                    ))}
-                  </TicketList>
-                </>
-              ) : (
-                <EmptyText>No suggestions available</EmptyText>
-              )}
+                  <DrawerSection>
+                    <DrawerSectionTitle>Source ticket{selectedIds.length > 1 ? 's' : ''}</DrawerSectionTitle>
+                    <DrawerBadgeRow>
+                      {selectedIds.map(id => (
+                        <DrawerBadge key={id}>#{id}</DrawerBadge>
+                      ))}
+                    </DrawerBadgeRow>
+                    <DrawerHint>{selectedIds.length > 1 ? 'These tickets' : 'This ticket'} will close with this comment</DrawerHint>
+                    <DrawerComposer>
+                      <DrawerComposerHeader $variant={closeType === 'internal' ? 'note' : null}>
+                        <DrawerComposerDropdown value={closeType} onChange={setCloseType} />
+                      </DrawerComposerHeader>
+                      <DrawerComposerBody
+                        $variant={closeType === 'internal' ? 'note' : null}
+                        value={closeComment}
+                        onChange={(e) => setCloseComment(e.target.value)}
+                      />
+                      <DrawerComposerToolbar $variant={closeType === 'internal' ? 'note' : null}>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><path d="M5 16V4h4c2.2 0 4 1.3 4 3.5S11.2 11 9 11H5"/><path d="M5 16h5c2.5 0 4.5-1.3 4.5-3.5S12.5 9 10 9"/></svg></DrawerToolbarBtn>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><circle cx="10" cy="10" r="7"/><circle cx="7.5" cy="8.5" r="1" fill="#87929d" stroke="none"/><circle cx="12.5" cy="8.5" r="1" fill="#87929d" stroke="none"/><path d="M7 12.5c1 1.5 5 1.5 6 0"/></svg></DrawerToolbarBtn>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><path d="M8 12l-2 2c-1 1-1 2.5 0 3.5s2.5 1 3.5 0l5-5c1-1 1-2.5 0-3.5"/><path d="M12 8l2-2c1-1 1-2.5 0-3.5s-2.5-1-3.5 0l-5 5c-1 1-1 2.5 0 3.5"/></svg></DrawerToolbarBtn>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><path d="M12 2l-1.5 3.5L7 7l3.5 1.5L12 12l1.5-3.5L17 7l-3.5-1.5L12 2z"/><path d="M4 13l2 2 8-8"/></svg></DrawerToolbarBtn>
+                      </DrawerComposerToolbar>
+                    </DrawerComposer>
+                  </DrawerSection>
 
-              <Divider />
+                  <DrawerSection>
+                    <DrawerSectionTitle>Destination ticket</DrawerSectionTitle>
+                    <DrawerBadgeRow>
+                      <DrawerBadge>#{currentTicket.id}</DrawerBadge>
+                    </DrawerBadgeRow>
+                    <DrawerHint>This ticket will receive this comment</DrawerHint>
+                    <DrawerComposer>
+                      <DrawerComposerHeader $variant={destType === 'internal' ? 'note' : null}>
+                        <DrawerComposerDropdown value={destType} onChange={setDestType} />
+                      </DrawerComposerHeader>
+                      <DrawerComposerBody
+                        $variant={destType === 'internal' ? 'note' : null}
+                        value={destComment}
+                        onChange={(e) => setDestComment(e.target.value)}
+                      />
+                      <DrawerComposerToolbar $variant={destType === 'internal' ? 'note' : null}>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><path d="M5 16V4h4c2.2 0 4 1.3 4 3.5S11.2 11 9 11H5"/><path d="M5 16h5c2.5 0 4.5-1.3 4.5-3.5S12.5 9 10 9"/></svg></DrawerToolbarBtn>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><circle cx="10" cy="10" r="7"/><circle cx="7.5" cy="8.5" r="1" fill="#87929d" stroke="none"/><circle cx="12.5" cy="8.5" r="1" fill="#87929d" stroke="none"/><path d="M7 12.5c1 1.5 5 1.5 6 0"/></svg></DrawerToolbarBtn>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><path d="M8 12l-2 2c-1 1-1 2.5 0 3.5s2.5 1 3.5 0l5-5c1-1 1-2.5 0-3.5"/><path d="M12 8l2-2c1-1 1-2.5 0-3.5s-2.5-1-3.5 0l-5 5c-1 1-1 2.5 0 3.5"/></svg></DrawerToolbarBtn>
+                        <DrawerToolbarBtn><svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#87929d" strokeWidth="1.5"><path d="M12 2l-1.5 3.5L7 7l3.5 1.5L12 12l1.5-3.5L17 7l-3.5-1.5L12 2z"/><path d="M4 13l2 2 8-8"/></svg></DrawerToolbarBtn>
+                      </DrawerComposerToolbar>
+                    </DrawerComposer>
+                  </DrawerSection>
+                </DrawerContent>
+                <DrawerFooter>
+                  <DrawerBackButton onClick={handleDrawerBack}>Back</DrawerBackButton>
+                  <DrawerMergeButton onClick={handleMergeConfirm}>Merge tickets</DrawerMergeButton>
+                </DrawerFooter>
+              </>
+            ) : (
+              <>
+                <SidePanelContent>
+                  <SectionHeader>
+                    <SectionTitle>
+                      Merge suggestions
+                      {availableTickets.length > 0 && <CountBadge>{availableTickets.length}</CountBadge>}
+                    </SectionTitle>
+                    <CollapseButton>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#68737d" strokeWidth="1.5">
+                        <path d="M4 10l4-4 4 4" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </CollapseButton>
+                  </SectionHeader>
 
-              <SectionHeader>
-                <SectionTitle>Similar resolved tickets</SectionTitle>
-                <CollapseButton>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#68737d" strokeWidth="1.5">
-                    <path d="M4 10l4-4 4 4" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </CollapseButton>
-              </SectionHeader>
-              <EmptyText>No suggestions available</EmptyText>
-            </SidePanelContent>
+                  {availableTickets.length > 0 ? (
+                    <>
+                      <SectionDescription>
+                        Review recent unresolved tickets from the same requester to merge into this ticket.
+                      </SectionDescription>
+                      <TicketList>
+                        {availableTickets.map(ticket => (
+                          <TicketItem key={ticket.id}>
+                            <Checkbox
+                              type="checkbox"
+                              checked={selectedIds.includes(ticket.id)}
+                              onChange={() => toggleTicket(ticket.id)}
+                            />
+                            <StatusDot>O</StatusDot>
+                            <TicketInfo>
+                              <TicketItemTitle>{ticket.title}</TicketItemTitle>
+                              <TicketSubtitle>{ticket.subtitle}</TicketSubtitle>
+                              <TicketDate>{ticket.date}</TicketDate>
+                            </TicketInfo>
+                          </TicketItem>
+                        ))}
+                      </TicketList>
+                    </>
+                  ) : (
+                    <EmptyText>No suggestions available</EmptyText>
+                  )}
 
-            {selectedIds.length > 0 && (
-              <MergeActionBar>
-                <MergeCount>{selectedIds.length} {selectedIds.length === 1 ? 'ticket' : 'tickets'}</MergeCount>
-                <MergeButton onClick={handleMergeClick}>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1f73b7" strokeWidth="1.5">
-                    <path d="M8 2v10" strokeLinecap="round"/>
-                    <path d="M5.5 4.5L8 2l2.5 2.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M8 12c-2 0-3 1-4.5 3" strokeLinecap="round"/>
-                    <path d="M8 12c2 0 3 1 4.5 3" strokeLinecap="round"/>
-                  </svg>
-                  Merge
-                </MergeButton>
-                <CancelButton onClick={handleCancel}>Cancel</CancelButton>
-              </MergeActionBar>
+                  <Divider />
+
+                  <SectionHeader>
+                    <SectionTitle>Similar resolved tickets</SectionTitle>
+                    <CollapseButton>
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#68737d" strokeWidth="1.5">
+                        <path d="M4 10l4-4 4 4" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </CollapseButton>
+                  </SectionHeader>
+                  <EmptyText>No suggestions available</EmptyText>
+                </SidePanelContent>
+
+                {selectedIds.length > 0 && (
+                  <MergeActionBar>
+                    <MergeCount>{selectedIds.length} {selectedIds.length === 1 ? 'ticket' : 'tickets'}</MergeCount>
+                    <MergeButton onClick={handleMergeClick}>
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1f73b7" strokeWidth="1.5">
+                        <path d="M8 2v10" strokeLinecap="round"/>
+                        <path d="M5.5 4.5L8 2l2.5 2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M8 12c-2 0-3 1-4.5 3" strokeLinecap="round"/>
+                        <path d="M8 12c2 0 3 1 4.5 3" strokeLinecap="round"/>
+                      </svg>
+                      Merge
+                    </MergeButton>
+                    <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+                  </MergeActionBar>
+                )}
+              </>
             )}
           </SidePanel>
 
@@ -1116,14 +1399,6 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
         </SubmitChevron>
       </Footer>
 
-      {showModal && (
-        <MergeModal
-          sourceTickets={selectedIds}
-          destinationTicket={currentTicket}
-          onClose={handleModalClose}
-          onMerge={handleMergeConfirm}
-        />
-      )}
     </Container>
   )
 }
