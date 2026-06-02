@@ -630,6 +630,50 @@ const SubmitChevron = styled.button`
   }
 `
 
+const TicketContextBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e9ebed;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: #2f3941;
+`
+
+const ContextTab = styled.span`
+  color: #68737d;
+  cursor: pointer;
+
+  &:hover {
+    color: #2f3941;
+  }
+`
+
+const ContextName = styled.span`
+  color: #2f3941;
+`
+
+const ContextBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+`
+
+const StatusTag = styled.span`
+  background: #e35b51;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+`
+
+const TicketNumber = styled.span`
+  font-size: 13px;
+  color: #2f3941;
+`
+
 const TopBar = styled.div`
   display: flex;
   align-items: center;
@@ -706,6 +750,15 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
           </svg>
         </NextButton>
       </TopBar>
+
+      <TicketContextBar>
+        <ContextTab>Email (create)</ContextTab>
+        <ContextName>Rodrigo De Conceição</ContextName>
+        <ContextBadge>
+          <StatusTag>Open</StatusTag>
+          <TicketNumber>Ticket #23</TicketNumber>
+        </ContextBadge>
+      </TicketContextBar>
 
       <Body>
         <PropertiesPanel>
