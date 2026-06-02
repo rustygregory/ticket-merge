@@ -9,13 +9,37 @@ const Container = styled.div`
   overflow: hidden;
 `
 
-const TopNav = styled.div`
+const Body = styled.div`
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+`
+
+const MainArea = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid #e9ebed;
+  position: relative;
+`
+
+const MainTopBar = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #e9ebed;
   flex-shrink: 0;
+`
+
+const KebabButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #68737d;
+  font-size: 18px;
+  padding: 4px;
+  line-height: 1;
 `
 
 const NextButton = styled.button`
@@ -35,24 +59,21 @@ const NextButton = styled.button`
   }
 `
 
-const Body = styled.div`
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-`
-
-const MainArea = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border-right: 1px solid #e9ebed;
-`
-
 const ConversationArea = styled.div`
   flex: 1;
-  padding: 20px;
+  padding: 0 20px 20px;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`
+
+const OnlineDot = styled.div`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #228f67;
+  margin-top: 12px;
 `
 
 const SidePanel = styled.div`
@@ -364,19 +385,20 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
 
   return (
     <Container>
-      <TopNav>
-        <NextButton>
-          Next
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2f3941" strokeWidth="1.5">
-            <path d="M6 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </NextButton>
-      </TopNav>
-
       <Body>
         <MainArea>
+          <MainTopBar>
+            <KebabButton>⋮</KebabButton>
+            <NextButton>
+              Next
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#2f3941" strokeWidth="1.5">
+                <path d="M6 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </NextButton>
+          </MainTopBar>
           <ConversationArea>
             <span style={{ color: '#1f73b7', fontSize: '13px', fontWeight: 600 }}>CC</span>
+            <OnlineDot />
           </ConversationArea>
         </MainArea>
 
