@@ -152,7 +152,7 @@ const MainContent = styled.div`
 `
 
 const TicketHeader = styled.div`
-  padding: 16px 20px 0;
+  padding: 16px 0 0;
   flex-shrink: 0;
 `
 
@@ -160,6 +160,7 @@ const TicketTitleRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 20px;
 `
 
 const TicketTitle = styled.h1`
@@ -250,7 +251,7 @@ const TicketMeta = styled.div`
   align-items: center;
   gap: 8px;
   margin-top: 4px;
-  padding-bottom: 12px;
+  padding: 0 20px 12px;
   border-bottom: 1px solid #d8dcde;
   font-size: 12px;
   color: #68737d;
@@ -269,7 +270,7 @@ const ViewSummary = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 12px 0;
+  padding: 12px 20px;
   border-bottom: 1px solid #d8dcde;
   font-size: 13px;
   color: #1f73b7;
@@ -991,7 +992,6 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
                 </MessageHeader>
                 <MessageBody>Yip</MessageBody>
               </MessageContent>
-              <MessageMenu>⋮</MessageMenu>
             </MessageBlock>
           </ConversationArea>
 
