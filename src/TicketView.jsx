@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import MergeModal from './MergeModal'
+import MergeTickets from './MergeTickets'
 
 const Container = styled.div`
   display: flex;
@@ -175,17 +176,73 @@ const HeaderIcons = styled.div`
 `
 
 const HeaderIcon = styled.button`
-  background: none;
-  border: none;
+  background: ${props => props.$active ? '#edf7ff' : 'none'};
+  border: ${props => props.$active ? '1px solid #b1c9e8' : '1px solid transparent'};
+  border-radius: 4px;
   cursor: pointer;
-  color: #68737d;
+  color: ${props => props.$active ? '#1f73b7' : '#68737d'};
   padding: 4px;
   display: flex;
   align-items: center;
+  position: relative;
 
   &:hover {
-    color: #2f3941;
+    color: ${props => props.$active ? '#1f73b7' : '#2f3941'};
   }
+`
+
+const KebabMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: #fff;
+  border: 1px solid #d8dcde;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  min-width: 200px;
+  padding: 4px 0;
+`
+
+const KebabMenuItem = styled.div`
+  padding: 10px 16px;
+  font-size: 14px;
+  color: ${props => props.$red ? '#cc3340' : '#2f3941'};
+  cursor: ${props => props.$disabled ? 'default' : 'pointer'};
+  opacity: ${props => props.$disabled ? 0.4 : 1};
+
+  &:hover {
+    background: ${props => props.$disabled ? 'none' : '#f5f5f5'};
+  }
+`
+
+const KebabDivider = styled.div`
+  height: 1px;
+  background: #e9ebed;
+  margin: 4px 0;
+`
+
+const DrawerScrim = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+`
+
+const DrawerPanel = styled.div`
+  background: #fff;
+  width: 380px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
 `
 
 const TicketMeta = styled.div`
@@ -706,6 +763,9 @@ const currentTicket = { id: 23, title: 'Refund merch' }
 function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
   const [selectedIds, setSelectedIds] = useState([])
   const [showModal, setShowModal] = useState(false)
+  const [showKebab, setShowKebab] = useState(false)
+  const [showMergeDrawer, setShowMergeDrawer] = useState(false)
+  const [drawerDestination, setDrawerDestination] = useState(null)
 
   const availableTickets = mergeSuggestions.filter(t => !mergedTicketIds.includes(t.id))
 
@@ -853,24 +913,45 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
             <TicketTitleRow>
               <TicketTitle>Refund merch</TicketTitle>
               <HeaderIcons>
-                <HeaderIcon>
+                <HeaderIcon $active>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2 4h12M2 8h12M2 12h12" strokeLinecap="round"/>
+                    <path d="M2 4h9M2 8h9M2 12h9" strokeLinecap="round"/>
+                    <path d="M13 3v10M11 6l2-3 2 3" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </HeaderIcon>
                 <HeaderIcon>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2 2l4 4M14 2l-4 4M2 14l4-4M14 14l-4-4" strokeLinecap="round"/>
-                    <path d="M6 6h4v4H6z"/>
+                    <path d="M2 3h12M4 3v1c0 2 2 4 4 4s4-2 4-4V3" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8 7v6M6 13h4" strokeLinecap="round"/>
                   </svg>
                 </HeaderIcon>
                 <HeaderIcon>
                   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
                     <circle cx="8" cy="8" r="6"/>
-                    <path d="M8 5v3l2 2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M8 5v3" strokeLinecap="round"/>
+                    <path d="M10.5 4.5c0 0 1 1.5 0 3" strokeLinecap="round"/>
+                    <path d="M5 8l3 0" strokeLinecap="round"/>
                   </svg>
                 </HeaderIcon>
-                <HeaderIcon>⋮</HeaderIcon>
+                <HeaderIcon onClick={() => setShowKebab(!showKebab)}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="8" cy="3" r="1" fill="currentColor" stroke="none"/>
+                    <circle cx="8" cy="8" r="1" fill="currentColor" stroke="none"/>
+                    <circle cx="8" cy="13" r="1" fill="currentColor" stroke="none"/>
+                  </svg>
+                  {showKebab && (
+                    <KebabMenu onClick={(e) => e.stopPropagation()}>
+                      <KebabMenuItem $disabled>Create as macro</KebabMenuItem>
+                      <KebabMenuItem onClick={() => { setShowKebab(false); setShowMergeDrawer(true); }}>Merge into another ticket</KebabMenuItem>
+                      <KebabMenuItem $disabled>Print ticket</KebabMenuItem>
+                      <KebabDivider />
+                      <KebabMenuItem $red $disabled>Suspend user</KebabMenuItem>
+                      <KebabMenuItem $red $disabled>Mark as spam</KebabMenuItem>
+                      <KebabDivider />
+                      <KebabMenuItem $red $disabled>Delete</KebabMenuItem>
+                    </KebabMenu>
+                  )}
+                </HeaderIcon>
               </HeaderIcons>
             </TicketTitleRow>
             <TicketMeta>
@@ -1123,6 +1204,31 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
           destinationTicket={currentTicket}
           onClose={handleModalClose}
           onMerge={handleMergeConfirm}
+        />
+      )}
+
+      {showMergeDrawer && !drawerDestination && (
+        <DrawerScrim onClick={() => setShowMergeDrawer(false)}>
+          <DrawerPanel onClick={(e) => e.stopPropagation()}>
+            <MergeTickets
+              sourceTickets={[currentTicket.id]}
+              onBack={() => setShowMergeDrawer(false)}
+              onNext={(dest) => setDrawerDestination(dest)}
+            />
+          </DrawerPanel>
+        </DrawerScrim>
+      )}
+
+      {showMergeDrawer && drawerDestination && (
+        <MergeModal
+          sourceTickets={[currentTicket.id]}
+          destinationTicket={drawerDestination}
+          onClose={() => { setDrawerDestination(null); }}
+          onMerge={() => {
+            setShowMergeDrawer(false)
+            setDrawerDestination(null)
+            onMergeComplete([currentTicket.id])
+          }}
         />
       )}
     </Container>

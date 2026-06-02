@@ -14,7 +14,7 @@ const Container = styled.div`
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 48px 80px;
+  padding: 20px;
 `
 
 const StepIndicator = styled.div`
@@ -259,8 +259,7 @@ const SuggestionsLabel = styled.span`
 const SuggestionsGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  padding-right: 40px;
+  gap: 12px;
 `
 
 const SuggestionCard = styled.div`
@@ -272,7 +271,7 @@ const SuggestionCard = styled.div`
   cursor: pointer;
   background: ${props => props.$active ? '#edf7ff' : '#ffffff'};
   transition: border-color 0.15s, background 0.15s;
-  width: 304px;
+  width: 100%;
   height: 100px;
   box-sizing: border-box;
 
@@ -540,14 +539,6 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
   return (
     <Container>
       <Content>
-        <StepIndicator>
-          <StepText>Step 1 of 2</StepText>
-          <ProgressBar>
-            <ProgressSegment $active />
-            <ProgressSegment />
-          </ProgressBar>
-        </StepIndicator>
-
         <Title>Merge tickets</Title>
         <Subtitle>Consolidate related tickets into a primary or suggested ticket.</Subtitle>
 
