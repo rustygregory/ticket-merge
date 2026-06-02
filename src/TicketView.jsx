@@ -250,8 +250,14 @@ const TicketMeta = styled.div`
   align-items: center;
   gap: 8px;
   margin-top: 4px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #d8dcde;
   font-size: 12px;
   color: #68737d;
+`
+
+const MetaPipe = styled.span`
+  color: #d8dcde;
 `
 
 const MetaLink = styled.span`
@@ -263,7 +269,8 @@ const ViewSummary = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #d8dcde;
   font-size: 13px;
   color: #1f73b7;
   cursor: pointer;
@@ -914,30 +921,25 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
               <TicketTitle>Refund merch</TicketTitle>
               <HeaderIcons>
                 <HeaderIcon $active>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2 4h9M2 8h9M2 12h9" strokeLinecap="round"/>
-                    <path d="M13 3v10M11 6l2-3 2 3" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="9" cy="9" r="7"/>
                   </svg>
                 </HeaderIcon>
                 <HeaderIcon>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M2 3h12M4 3v1c0 2 2 4 4 4s4-2 4-4V3" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M8 7v6M6 13h4" strokeLinecap="round"/>
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="9" cy="9" r="7"/>
                   </svg>
                 </HeaderIcon>
                 <HeaderIcon>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <circle cx="8" cy="8" r="6"/>
-                    <path d="M8 5v3" strokeLinecap="round"/>
-                    <path d="M10.5 4.5c0 0 1 1.5 0 3" strokeLinecap="round"/>
-                    <path d="M5 8l3 0" strokeLinecap="round"/>
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="9" cy="9" r="7"/>
                   </svg>
                 </HeaderIcon>
                 <HeaderIcon onClick={() => setShowKebab(!showKebab)}>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="8" cy="3" r="1" fill="currentColor" stroke="none"/>
-                    <circle cx="8" cy="8" r="1" fill="currentColor" stroke="none"/>
-                    <circle cx="8" cy="13" r="1" fill="currentColor" stroke="none"/>
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                    <circle cx="9" cy="4" r="1.5" fill="currentColor"/>
+                    <circle cx="9" cy="9" r="1.5" fill="currentColor"/>
+                    <circle cx="9" cy="14" r="1.5" fill="currentColor"/>
                   </svg>
                   {showKebab && (
                     <KebabMenu onClick={(e) => e.stopPropagation()}>
@@ -956,16 +958,15 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
             </TicketTitleRow>
             <TicketMeta>
               <span>Via web form</span>
-              <span>·</span>
+              <MetaPipe>|</MetaPipe>
               <span>Topic</span>
               <MetaLink>Refund request</MetaLink>
-              <span>·</span>
+              <MetaPipe>|</MetaPipe>
               <span>☺ Neutral</span>
             </TicketMeta>
             <ViewSummary>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#1f73b7" strokeWidth="1.5">
-                <rect x="2" y="2" width="12" height="12" rx="2"/>
-                <path d="M5 6h6M5 8h6M5 10h4"/>
+                <circle cx="8" cy="8" r="6"/>
               </svg>
               View ticket summary
             </ViewSummary>
