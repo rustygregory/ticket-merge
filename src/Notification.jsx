@@ -61,8 +61,8 @@ const CloseButton = styled.button`
 
 function Notification({ ticketCount, onClose }) {
   const message = ticketCount > 1
-    ? 'Tickets successfully merged'
-    : 'Ticket successfully merged'
+    ? 'Tickets were successfully merged'
+    : 'Ticket was successfully merged'
 
   return (
     <Wrapper>

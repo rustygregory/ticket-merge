@@ -1,43 +1,18 @@
 import { useState, useEffect } from 'react'
 import { ThemeProvider, DEFAULT_THEME } from '@zendeskgarden/react-theming'
-import Views from './Views'
-import MergeTickets from './MergeTickets'
-import MergeStep2 from './MergeStep2'
+import TicketView from './TicketView'
 import Notification from './Notification'
 import Shell from './Shell'
 import './App.css'
 
-const ScreenWrapper = ({ visible, children }) => (
-  <div style={{ display: visible ? 'contents' : 'none' }}>
-    {children}
-  </div>
-)
-
 function App() {
-  const [screen, setScreen] = useState('views')
-  const [selectedTickets, setSelectedTickets] = useState([])
-  const [destinationTicket, setDestinationTicket] = useState(null)
-  const [mergeStarted, setMergeStarted] = useState(false)
   const [showNotification, setShowNotification] = useState(false)
-  const [mergedTickets, setMergedTickets] = useState([])
   const [lastMergeCount, setLastMergeCount] = useState(0)
+  const [mergedTicketIds, setMergedTicketIds] = useState([])
 
-  const startMerge = () => {
-    setMergeStarted(true)
-    setScreen('merge-step1')
-  }
-
-  const resetMerge = () => {
-    setMergeStarted(false)
-    setSelectedTickets([])
-    setDestinationTicket(null)
-    setScreen('views')
-  }
-
-  const completeMerge = () => {
-    setLastMergeCount(selectedTickets.length)
-    setMergedTickets(prev => [...prev, ...selectedTickets])
-    resetMerge()
+  const handleMergeComplete = (ticketIds) => {
+    setMergedTicketIds(prev => [...prev, ...ticketIds])
+    setLastMergeCount(ticketIds.length)
     setShowNotification(true)
   }
 
@@ -51,36 +26,10 @@ function App() {
   return (
     <ThemeProvider theme={DEFAULT_THEME}>
       <Shell>
-        <ScreenWrapper visible={screen === 'views'}>
-          <Views
-            selectedTickets={selectedTickets}
-            setSelectedTickets={setSelectedTickets}
-            mergedTickets={mergedTickets}
-            onMerge={startMerge}
-          />
-        </ScreenWrapper>
-        {mergeStarted && (
-          <>
-            <ScreenWrapper visible={screen === 'merge-step1'}>
-              <MergeTickets
-                sourceTickets={selectedTickets}
-                onBack={resetMerge}
-                onNext={(dest) => {
-                  setDestinationTicket(dest)
-                  setScreen('merge-step2')
-                }}
-              />
-            </ScreenWrapper>
-            <ScreenWrapper visible={screen === 'merge-step2'}>
-              <MergeStep2
-                sourceTickets={selectedTickets}
-                destinationTicket={destinationTicket}
-                onBack={() => setScreen('merge-step1')}
-                onMerge={completeMerge}
-              />
-            </ScreenWrapper>
-          </>
-        )}
+        <TicketView
+          onMergeComplete={handleMergeComplete}
+          mergedTicketIds={mergedTicketIds}
+        />
         {showNotification && (
           <Notification ticketCount={lastMergeCount} onClose={() => setShowNotification(false)} />
         )}
