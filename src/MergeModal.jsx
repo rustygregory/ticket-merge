@@ -10,19 +10,17 @@ const Scrim = styled.div`
   background: rgba(0, 0, 0, 0.4);
   z-index: 100;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 `
 
 const Panel = styled.div`
   background: #fff;
-  border-radius: 12px;
-  width: 640px;
-  max-height: 80vh;
+  width: 480px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
 `
 
 const Content = styled.div`
