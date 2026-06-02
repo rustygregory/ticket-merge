@@ -107,16 +107,68 @@ const SourceTicketName = styled.span`
   color: #2f3941;
 `
 
+const MoreLinkWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  margin-top: 4px;
+`
+
 const MoreLink = styled.span`
   font-size: 13px;
   color: #1f73b7;
   cursor: pointer;
-  margin-top: 4px;
-  display: block;
+  display: inline-block;
 
   &:hover {
     text-decoration: underline;
   }
+`
+
+const MoreTooltip = styled.div`
+  position: absolute;
+  top: auto;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 8px;
+  background: #2f3941;
+  border-radius: 8px;
+  padding: 16px;
+  z-index: 50;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+`
+
+const MoreTooltipTitle = styled.div`
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 12px;
+`
+
+const MoreTooltipGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 6px 24px;
+`
+
+const MoreTooltipRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`
+
+const MoreTooltipBadge = styled.span`
+  background: #49545c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+`
+
+const MoreTooltipName = styled.span`
+  font-size: 13px;
+  color: #fff;
 `
 
 const FieldLabel = styled.h3`
@@ -427,6 +479,7 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
   const [showDropdown, setShowDropdown] = useState(false)
   const [inputError, setInputError] = useState(null)
   const [showAlert, setShowAlert] = useState(null)
+  const [showMoreTooltip, setShowMoreTooltip] = useState(false)
   const inputRef = useRef(null)
 
   const sourceBrands = sourceTickets.map(id => allTickets.find(t => t.id === id)?.brand).filter(Boolean)
@@ -551,7 +604,26 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
             )
           })}
           {remainingCount > 0 && (
-            <MoreLink>+{remainingCount} more</MoreLink>
+            <MoreLinkWrapper>
+              <MoreLink onClick={() => setShowMoreTooltip(!showMoreTooltip)}>+{remainingCount} more</MoreLink>
+              {showMoreTooltip && (
+                <MoreTooltip>
+                  <MoreTooltipTitle>Source tickets</MoreTooltipTitle>
+                  <MoreTooltipGrid>
+                    {sourceTickets.slice(5).map(id => {
+                      const ticket = allTickets.find(t => t.id === id)
+                      if (!ticket) return null
+                      return (
+                        <MoreTooltipRow key={id}>
+                          <MoreTooltipBadge>#{id}</MoreTooltipBadge>
+                          <MoreTooltipName>{ticket.subject}</MoreTooltipName>
+                        </MoreTooltipRow>
+                      )
+                    })}
+                  </MoreTooltipGrid>
+                </MoreTooltip>
+              )}
+            </MoreLinkWrapper>
           )}
 
           {showAlert === 'empty' && (
