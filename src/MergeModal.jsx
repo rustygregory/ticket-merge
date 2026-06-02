@@ -15,7 +15,7 @@ const Scrim = styled.div`
 
 const Panel = styled.div`
   background: #fff;
-  width: 480px;
+  width: 380px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -190,17 +190,17 @@ const BackButton = styled.button`
 `
 
 const MergeBtn = styled.button`
-  background: #2f3941;
+  background: #1f73b7;
   color: #fff;
   border: none;
-  border-radius: 100px;
+  border-radius: 4px;
   padding: 10px 28px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
 
   &:hover {
-    background: #49545c;
+    background: #144a75;
   }
 `
 
