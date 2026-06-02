@@ -633,12 +633,13 @@ const SubmitChevron = styled.button`
 const TicketContextBar = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 8px 16px;
-  border-bottom: 1px solid #e9ebed;
+  height: 56px;
+  padding: 0 16px;
+  border-bottom: 1px solid #d8dcde;
   flex-shrink: 0;
   font-size: 13px;
   color: #2f3941;
+  gap: 16px;
 `
 
 const ContextTab = styled.span`
@@ -674,14 +675,6 @@ const TicketNumber = styled.span`
   color: #2f3941;
 `
 
-const TopBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 8px 16px;
-  flex-shrink: 0;
-`
-
 const NextButton = styled.button`
   background: none;
   border: 1px solid #d8dcde;
@@ -693,6 +686,7 @@ const NextButton = styled.button`
   display: flex;
   align-items: center;
   gap: 4px;
+  margin-left: auto;
 
   &:hover {
     background: #f5f5f5;
@@ -742,15 +736,6 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
 
   return (
     <Container>
-      <TopBar>
-        <NextButton>
-          Next
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2f3941" strokeWidth="1.5">
-            <path d="M6 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </NextButton>
-      </TopBar>
-
       <TicketContextBar>
         <ContextTab>Email (create)</ContextTab>
         <ContextName>Rodrigo De Conceição</ContextName>
@@ -758,6 +743,12 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
           <StatusTag>Open</StatusTag>
           <TicketNumber>Ticket #23</TicketNumber>
         </ContextBadge>
+        <NextButton>
+          Next
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#2f3941" strokeWidth="1.5">
+            <path d="M6 3l5 5-5 5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </NextButton>
       </TicketContextBar>
 
       <Body>
