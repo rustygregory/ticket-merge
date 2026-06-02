@@ -140,7 +140,7 @@ const Avatar = styled.div`
   background: linear-gradient(135deg, #a855f7, #6366f1);
 `
 
-function TopBar() {
+function TopBar({ onTabClose }) {
   return (
     <Bar>
       <ZendeskLogo viewBox="0 0 26 26" fill="none">
@@ -164,7 +164,7 @@ function TopBar() {
         </TicketTabIcon>
         <TicketTabText>Refund merch<br/>#23</TicketTabText>
         <TicketTabDot />
-        <TicketTabClose>×</TicketTabClose>
+        <TicketTabClose onClick={onTabClose}>×</TicketTabClose>
       </TicketTab>
       <TabPlus>+</TabPlus>
       <Spacer />

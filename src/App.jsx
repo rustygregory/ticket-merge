@@ -27,7 +27,7 @@ function App() {
 
   return (
     <ThemeProvider theme={DEFAULT_THEME}>
-      <Shell>
+      <Shell onTabClose={() => setScreen('views')}>
         {screen === 'views' && (
           <Views
             onTicketClick={() => setScreen('ticket')}

@@ -27,10 +27,10 @@ const Main = styled.main`
   position: relative;
 `
 
-function Shell({ children }) {
+function Shell({ children, onTabClose }) {
   return (
     <Wrapper>
-      <TopBar />
+      <TopBar onTabClose={onTabClose} />
       <Body>
         <SideNav />
         <Main>{children}</Main>
