@@ -539,6 +539,14 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
   return (
     <Container>
       <Content>
+        <StepIndicator>
+          <StepText>Step 1 of 2</StepText>
+          <ProgressBar>
+            <ProgressSegment $active />
+            <ProgressSegment />
+          </ProgressBar>
+        </StepIndicator>
+
         <Title>Merge tickets</Title>
         <Subtitle>Consolidate related tickets into a primary or suggested ticket.</Subtitle>
 
