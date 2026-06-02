@@ -11,82 +11,85 @@ const Container = styled.div`
   background: #fff;
 `
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  flex-shrink: 0;
+`
+
+const HeaderTitle = styled.h1`
+  font-size: 18px;
+  font-weight: 600;
+  color: #2f3941;
+  margin: 0;
+`
+
+const CloseBtn = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #68737d;
+  font-size: 20px;
+  padding: 4px;
+  line-height: 1;
+
+  &:hover {
+    color: #2f3941;
+  }
+`
+
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 0 20px 20px;
 `
 
-const StepIndicator = styled.div`
+const StepRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
+`
+
+const StepCircle = styled.div`
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: ${props => props.$active ? '#1f73b7' : '#e9ebed'};
+  color: ${props => props.$active ? '#fff' : '#68737d'};
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 28px;
-`
-
-const StepText = styled.span`
+  justify-content: center;
   font-size: 13px;
-  color: #2f3941;
-  font-weight: 400;
+  font-weight: 600;
+  flex-shrink: 0;
 `
 
-const ProgressBar = styled.div`
-  display: flex;
-  gap: 4px;
-`
-
-const ProgressSegment = styled.div`
-  width: 40px;
-  height: 3.5px;
-  border-radius: 2px;
-  background: ${props => props.$active ? '#2f3941' : '#d8dcde'};
-`
-
-const Title = styled.h1`
-  font-size: 28px;
+const StepLabel = styled.span`
+  font-size: 15px;
   font-weight: 500;
+  color: ${props => props.$active ? '#2f3941' : '#68737d'};
+  padding-top: 4px;
+`
+
+const StepContent = styled.div`
+  padding-left: 40px;
+`
+
+const SectionLabel = styled.h3`
+  font-size: 14px;
+  font-weight: 600;
   color: #2f3941;
   margin: 0 0 8px;
 `
 
-const Subtitle = styled.p`
-  font-size: 15px;
-  color: #68737d;
-  margin: 0 0 36px;
-`
-
-const SectionLabel = styled.h3`
-  font-size: 15px;
-  font-weight: 600;
-  color: #2f3941;
-  margin: 0 0 12px;
-`
-
-const SourceTicketGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  margin-bottom: 36px;
-`
-
-const SourceTicketCard = styled.div`
+const SourceTicketRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  border: 1px solid #d8dcde;
-  border-radius: 4px;
-  padding: 4px 12px 4px 4px;
-  width: 100%;
-  height: 28px;
-  box-sizing: border-box;
-`
-
-const SourceTicketName = styled.span`
-  font-size: 14px;
-  color: #2f3941;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 8px;
+  padding: 4px 0;
 `
 
 const TicketBadge = styled.span`
@@ -99,17 +102,34 @@ const TicketBadge = styled.span`
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 `
 
+const SourceTicketName = styled.span`
+  font-size: 14px;
+  color: #2f3941;
+`
+
+const MoreLink = styled.span`
+  font-size: 13px;
+  color: #1f73b7;
+  cursor: pointer;
+  margin-top: 4px;
+  display: block;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
+
 const FieldLabel = styled.h3`
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #2f3941;
-  margin: 0 0 4px;
+  margin: 24px 0 4px;
 `
 
 const FieldHint = styled.p`
-  font-size: 14px;
+  font-size: 13px;
   color: #68737d;
-  margin: 0 0 12px;
+  margin: 0 0 10px;
 `
 
 const InputContainer = styled.div`
@@ -128,6 +148,7 @@ const InputWrapper = styled.div`
   gap: 8px;
   height: 40px;
   cursor: text;
+  box-sizing: border-box;
 
   &:focus-within {
     border-color: ${props => props.$error ? '#cc3340' : '#1f73b7'};
@@ -216,27 +237,6 @@ const DropdownBadge = styled.span`
   flex-shrink: 0;
 `
 
-const AlertWrapper = styled.div`
-  margin-bottom: 16px;
-  max-width: 630px;
-`
-
-const OrgWarningWell = styled.div`
-  background: #fff3e4;
-  border: 1px solid #fed6a9;
-  border-radius: 4px;
-  padding: 22px 40px 22px 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`
-
-const OrgWarningText = styled.span`
-  font-size: 14px;
-  color: #4c2c17;
-  font-weight: 600;
-`
-
 const InputError = styled.span`
   display: flex;
   align-items: center;
@@ -251,47 +251,72 @@ const SuggestionsLabel = styled.span`
   font-size: 14px;
   font-weight: 400;
   color: #2f3941;
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 20px;
+  margin-bottom: 12px;
 `
 
 const SuggestionsGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 `
 
 const SuggestionCard = styled.div`
-  position: relative;
-  z-index: 1;
-  border: 1.5px solid ${props => props.$active ? '#1f73b7' : '#b1c9e8'};
+  border: 1.5px solid ${props => props.$active ? '#1f73b7' : '#d8dcde'};
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px;
   cursor: pointer;
-  background: ${props => props.$active ? '#edf7ff' : '#ffffff'};
+  background: ${props => props.$active ? '#edf7ff' : '#fff'};
   transition: border-color 0.15s, background 0.15s;
-  width: 100%;
-  height: 100px;
-  box-sizing: border-box;
 
   &:hover {
     border-color: #1f73b7;
-    background: ${props => props.$active ? '#edf7ff' : '#ffffff'};
   }
+`
+
+const CardTopRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+`
+
+const CardStatusDot = styled.span`
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: #e35b51;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
 `
 
 const CardTitle = styled.span`
   display: block;
-  color: #1f73b7;
-  font-size: 14px;
-  font-weight: 400;
-  margin: 10px 0 8px;
-  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2f3941;
+  margin-bottom: 4px;
 `
 
 const CardMeta = styled.span`
   font-size: 12px;
   color: #68737d;
+`
+
+const Step2Row = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+`
+
+const AlertWrapper = styled.div`
+  margin-bottom: 16px;
 `
 
 const Footer = styled.div`
@@ -301,13 +326,11 @@ const Footer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   flex-shrink: 0;
-  position: relative;
-  z-index: 1;
 `
 
-const CancelButton = styled.button`
+const CancelBtn = styled.button`
   background: none;
   border: none;
   font-size: 14px;
@@ -324,8 +347,8 @@ const NextButton = styled.button`
   background: #2f3941;
   color: #fff;
   border: none;
-  border-radius: 100px;
-  padding: 12px 32px;
+  border-radius: 4px;
+  padding: 10px 28px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -397,8 +420,6 @@ const suggestions = [
   { id: 44, title: 'Refund for canceled event tickets', requester: 'Rodrigo De Conceição', date: 'May 8, 2026' },
 ]
 
-let nextCustomId = 100
-
 function MergeTickets({ sourceTickets, onBack, onNext }) {
   const [selected, setSelected] = useState(null)
   const [selectedCustom, setSelectedCustom] = useState(null)
@@ -406,28 +427,18 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
   const [showDropdown, setShowDropdown] = useState(false)
   const [inputError, setInputError] = useState(null)
   const [showAlert, setShowAlert] = useState(null)
-  const [showOrgWarning, setShowOrgWarning] = useState(false)
   const inputRef = useRef(null)
 
   const sourceBrands = sourceTickets.map(id => allTickets.find(t => t.id === id)?.brand).filter(Boolean)
   const sourceBrand = sourceBrands[0]
-  const sourceOrgs = sourceTickets.map(id => allTickets.find(t => t.id === id)?.org).filter(Boolean)
-  const sourceOrg = sourceOrgs[0]
 
   const selectedTicket = selected
     ? suggestions.find(t => t.id === selected) || { id: selected, title: selectedCustom }
     : null
 
-  const orgMismatch = selected
-    ? (() => { const t = allTickets.find(t => t.id === selected); return t && sourceOrg && t.org !== sourceOrg })()
-    : false
-
   const checkBrandMismatch = (ticketId) => {
     const ticket = allTickets.find(t => t.id === ticketId)
-    if (ticket && sourceBrand && ticket.brand !== sourceBrand) {
-      return true
-    }
-    return false
+    return ticket && sourceBrand && ticket.brand !== sourceBrand
   }
 
   const getFilteredTickets = () => {
@@ -473,7 +484,6 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
       setSelectedCustom(null)
       setInputError(null)
       setShowAlert(null)
-      setShowOrgWarning(false)
     } else {
       setSelected(id)
       setSelectedCustom(null)
@@ -484,10 +494,6 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
       if (checkBrandMismatch(id)) {
         setInputError('brand')
         setShowAlert('brand')
-        setShowOrgWarning(false)
-      } else {
-        const t = allTickets.find(t => t.id === id)
-        setShowOrgWarning(t && sourceOrg && t.org !== sourceOrg)
       }
     }
   }
@@ -502,25 +508,6 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
     if (checkBrandMismatch(ticket.id)) {
       setInputError('brand')
       setShowAlert('brand')
-      setShowOrgWarning(false)
-    } else {
-      const t = allTickets.find(t => t.id === ticket.id)
-      setShowOrgWarning(t && sourceOrg && t.org !== sourceOrg)
-    }
-  }
-
-  const handleInputChange = (e) => {
-    setSearchValue(e.target.value)
-    setShowDropdown(e.target.value.trim().length > 0)
-  }
-
-  const handleInputKeyDown = (e) => {
-    if (e.key === 'Enter' && searchValue.trim()) {
-      const customId = nextCustomId++
-      setSelected(customId)
-      setSelectedCustom(searchValue.trim())
-      setSearchValue('')
-      setShowDropdown(false)
     }
   }
 
@@ -531,146 +518,143 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
     setShowDropdown(false)
     setInputError(null)
     setShowAlert(null)
-    setShowOrgWarning(false)
     inputRef.current?.focus()
   }
 
+  const visibleSource = sourceTickets.slice(0, 5)
+  const remainingCount = sourceTickets.length - 5
+  const availableSuggestions = suggestions.filter(t => !sourceTickets.includes(t.id)).slice(0, 4)
+
   return (
     <Container>
+      <Header>
+        <HeaderTitle>Merge tickets</HeaderTitle>
+        <CloseBtn onClick={onBack}>×</CloseBtn>
+      </Header>
+
       <Content>
-        <StepIndicator>
-          <StepText>Step 1 of 2</StepText>
-          <ProgressBar>
-            <ProgressSegment $active />
-            <ProgressSegment />
-          </ProgressBar>
-        </StepIndicator>
+        <StepRow>
+          <StepCircle $active>1</StepCircle>
+          <StepLabel $active>Select destination ticket</StepLabel>
+        </StepRow>
 
-        <Title>Merge tickets</Title>
-        <Subtitle>Consolidate related tickets into a primary or suggested ticket.</Subtitle>
-
-        <SectionLabel>Source ticket{sourceTickets.length > 1 ? 's' : ''}</SectionLabel>
-        <SourceTicketGrid>
-          {sourceTickets.map(id => {
+        <StepContent>
+          <SectionLabel>Source tickets</SectionLabel>
+          {visibleSource.map(id => {
             const ticket = allTickets.find(t => t.id === id)
             if (!ticket) return null
             return (
-              <Tooltip key={id} content={ticket.subject} placement="top" delayMS={300}>
-                <SourceTicketCard>
-                  <TicketBadge>#{id}</TicketBadge>
-                  <SourceTicketName>{ticket.subject}</SourceTicketName>
-                </SourceTicketCard>
-              </Tooltip>
+              <SourceTicketRow key={id}>
+                <TicketBadge>#{id}</TicketBadge>
+                <SourceTicketName>{ticket.subject}</SourceTicketName>
+              </SourceTicketRow>
             )
           })}
-        </SourceTicketGrid>
+          {remainingCount > 0 && (
+            <MoreLink>+{remainingCount} more</MoreLink>
+          )}
 
-        {showOrgWarning && (
-          <AlertWrapper>
-            <OrgWarningWell>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="8.5" stroke="#ac5918" strokeWidth="1.5"/>
-                <path d="M10 6v5" stroke="#ac5918" strokeWidth="1.5" strokeLinecap="round"/>
-                <circle cx="10" cy="14" r="1" fill="#ac5918"/>
-              </svg>
-              <OrgWarningText>These tickets belong to different organizations</OrgWarningText>
-            </OrgWarningWell>
-          </AlertWrapper>
-        )}
+          {showAlert === 'empty' && (
+            <AlertWrapper style={{ marginTop: 16 }}>
+              <Alert type="error">
+                <Alert.Title>Can't advance</Alert.Title>
+                <Alert.Paragraph>Search for a destination ticket or choose a suggestion to continue.</Alert.Paragraph>
+                <Alert.Close aria-label="Close" onClick={() => setShowAlert(null)} />
+              </Alert>
+            </AlertWrapper>
+          )}
 
-        {showAlert === 'empty' && (
-          <AlertWrapper>
-            <Alert type="error">
-              <Alert.Title>Can't advance</Alert.Title>
-              <Alert.Paragraph>Search for a destination ticket or choose a suggestion to continue to the next step.</Alert.Paragraph>
-              <Alert.Close aria-label="Close" onClick={() => setShowAlert(null)} />
-            </Alert>
-          </AlertWrapper>
-        )}
+          {showAlert === 'brand' && (
+            <AlertWrapper style={{ marginTop: 16 }}>
+              <Alert type="error">
+                <Alert.Title>Can't merge different brands</Alert.Title>
+                <Alert.Paragraph>Select a ticket from the same brand.</Alert.Paragraph>
+                <Alert.Close aria-label="Close" onClick={() => setShowAlert(null)} />
+              </Alert>
+            </AlertWrapper>
+          )}
 
-        {showAlert === 'brand' && (
-          <AlertWrapper>
-            <Alert type="error">
-              <Alert.Title>Can't merge different brands</Alert.Title>
-              <Alert.Paragraph>Select a ticket from the same brand.</Alert.Paragraph>
-              <Alert.Close aria-label="Close" onClick={() => setShowAlert(null)} />
-            </Alert>
-          </AlertWrapper>
-        )}
-
-        <FieldLabel>Destination ticket* (required)</FieldLabel>
-        <FieldHint>Search for a specific ticket or select a suggested ticket</FieldHint>
-        <InputContainer>
-          <InputWrapper $error={!!inputError} onClick={() => !selected && inputRef.current?.focus()}>
-            {selectedTicket ? (
-              <>
-                <InputBadge>#{selectedTicket.id}</InputBadge>
-                <InputTicketName>{selectedTicket.title || selectedCustom}</InputTicketName>
-                <ClearButton onClick={handleClear}>×</ClearButton>
-              </>
-            ) : (
-              <SearchInput
-                ref={inputRef}
-                type="text"
-                value={searchValue}
-                onChange={handleInputChange}
-                onKeyDown={handleInputKeyDown}
-                onFocus={() => setShowDropdown(true)}
-                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-                placeholder=""
-              />
+          <FieldLabel>Destination ticket* (required)</FieldLabel>
+          <FieldHint>Search for a specific ticket or select a suggested ticket</FieldHint>
+          <InputContainer>
+            <InputWrapper $error={!!inputError} onClick={() => !selected && inputRef.current?.focus()}>
+              {selectedTicket ? (
+                <>
+                  <InputBadge>#{selectedTicket.id}</InputBadge>
+                  <InputTicketName>{selectedTicket.title || selectedCustom}</InputTicketName>
+                  <ClearButton onClick={handleClear}>×</ClearButton>
+                </>
+              ) : (
+                <SearchInput
+                  ref={inputRef}
+                  type="text"
+                  value={searchValue}
+                  onChange={(e) => { setSearchValue(e.target.value); setShowDropdown(e.target.value.trim().length > 0) }}
+                  onFocus={() => setShowDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+                  placeholder=""
+                />
+              )}
+            </InputWrapper>
+            {showDropdown && filteredTickets.length > 0 && (
+              <Dropdown>
+                {filteredTickets.map(ticket => (
+                  <DropdownItem key={ticket.id} onMouseDown={() => handleDropdownSelect(ticket)}>
+                    <DropdownBadge>#{ticket.id}</DropdownBadge>
+                    {ticket.subject}
+                  </DropdownItem>
+                ))}
+              </Dropdown>
             )}
-          </InputWrapper>
-          {showDropdown && filteredTickets.length > 0 && (
-            <Dropdown>
-              {filteredTickets.map(ticket => (
-                <DropdownItem key={ticket.id} onMouseDown={() => handleDropdownSelect(ticket)}>
-                  <DropdownBadge>#{ticket.id}</DropdownBadge>
-                  {ticket.subject}
-                </DropdownItem>
-              ))}
-            </Dropdown>
-          )}
-          {inputError === 'empty' && (
-            <InputError>
-              <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="8.5" stroke="#cc3340" strokeWidth="1.5"/>
-                <path d="M10 6v5" stroke="#cc3340" strokeWidth="1.5" strokeLinecap="round"/>
-                <circle cx="10" cy="14" r="1" fill="#cc3340"/>
-              </svg>
-              Search for a ticket or select a suggested ticket
-            </InputError>
-          )}
-          {inputError === 'brand' && (
-            <InputError>
-              <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="8.5" stroke="#cc3340" strokeWidth="1.5"/>
-                <path d="M10 6v5" stroke="#cc3340" strokeWidth="1.5" strokeLinecap="round"/>
-                <circle cx="10" cy="14" r="1" fill="#cc3340"/>
-              </svg>
-              Can't merge different brands
-            </InputError>
-          )}
-        </InputContainer>
+            {inputError === 'empty' && (
+              <InputError>
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="10" r="8.5" stroke="#cc3340" strokeWidth="1.5"/>
+                  <path d="M10 6v5" stroke="#cc3340" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="10" cy="14" r="1" fill="#cc3340"/>
+                </svg>
+                Search for a ticket or select a suggested ticket
+              </InputError>
+            )}
+            {inputError === 'brand' && (
+              <InputError>
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                  <circle cx="10" cy="10" r="8.5" stroke="#cc3340" strokeWidth="1.5"/>
+                  <path d="M10 6v5" stroke="#cc3340" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="10" cy="14" r="1" fill="#cc3340"/>
+                </svg>
+                Can't merge different brands
+              </InputError>
+            )}
+          </InputContainer>
 
-        <SuggestionsLabel>{Math.min(suggestions.filter(t => !sourceTickets.includes(t.id)).length, 10)} Suggestions</SuggestionsLabel>
-        <SuggestionsGrid>
-          {suggestions.filter(t => !sourceTickets.includes(t.id)).slice(0, 10).map(ticket => (
-            <SuggestionCard
-              key={ticket.id}
-              $active={selected === ticket.id}
-              onClick={() => handleCardClick(ticket.id)}
-            >
-              <TicketBadge>#{ticket.id}</TicketBadge>
-              <CardTitle>{ticket.title}</CardTitle>
-              <CardMeta>{ticket.requester} &bull; {ticket.date}</CardMeta>
-            </SuggestionCard>
-          ))}
-        </SuggestionsGrid>
+          <SuggestionsLabel>{availableSuggestions.length} Suggestions</SuggestionsLabel>
+          <SuggestionsGrid>
+            {availableSuggestions.map(ticket => (
+              <SuggestionCard
+                key={ticket.id}
+                $active={selected === ticket.id}
+                onClick={() => handleCardClick(ticket.id)}
+              >
+                <CardTopRow>
+                  <CardStatusDot>O</CardStatusDot>
+                  <TicketBadge>#{ticket.id}</TicketBadge>
+                </CardTopRow>
+                <CardTitle>{ticket.title}</CardTitle>
+                <CardMeta>{ticket.requester}<br/>{ticket.date}</CardMeta>
+              </SuggestionCard>
+            ))}
+          </SuggestionsGrid>
+        </StepContent>
+
+        <Step2Row>
+          <StepCircle>2</StepCircle>
+          <StepLabel>Review and add comments</StepLabel>
+        </Step2Row>
       </Content>
 
       <Footer>
-        <CancelButton onClick={onBack}>Cancel</CancelButton>
+        <CancelBtn onClick={onBack}>Cancel</CancelBtn>
         <NextButton onClick={() => {
           if (!selectedTicket) {
             setInputError('empty')
