@@ -32,11 +32,66 @@ const ChevronDown = styled.svg`
   height: 12px;
 `
 
-const AccountName = styled.span`
-  color: #2f3941;
-  font-size: 14px;
-  font-weight: 400;
+const TicketTab = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #2f3941;
+  border-radius: 100px;
+  padding: 6px 12px;
   margin-left: 8px;
+`
+
+const TicketTabIcon = styled.span`
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const TicketTabText = styled.span`
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+`
+
+const TicketTabDot = styled.span`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #87929d;
+`
+
+const TicketTabClose = styled.button`
+  background: none;
+  border: none;
+  color: #87929d;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: #fff;
+  }
+`
+
+const TabPlus = styled.button`
+  background: none;
+  border: none;
+  color: #68737d;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+
+  &:hover {
+    color: #2f3941;
+  }
 `
 
 const Spacer = styled.div`
@@ -100,7 +155,18 @@ function TopBar() {
           <path d="M3 4.5l3 3 3-3" stroke="#2f3941" strokeWidth="1.5" strokeLinecap="round"/>
         </ChevronDown>
       </ProductName>
-      <AccountName>Rusteze</AccountName>
+      <TicketTab>
+        <TicketTabIcon>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#87929d" strokeWidth="1.5">
+            <circle cx="8" cy="8" r="6"/>
+            <path d="M8 5v3l2 2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </TicketTabIcon>
+        <TicketTabText>Refund merch<br/>#23</TicketTabText>
+        <TicketTabDot />
+        <TicketTabClose>×</TicketTabClose>
+      </TicketTab>
+      <TabPlus>+</TabPlus>
       <Spacer />
       <SearchBox>
         <svg width="14" height="14" viewBox="0 0 16 16" fill="#87929d">
