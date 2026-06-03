@@ -9,7 +9,7 @@ import Shell from './Shell'
 import './App.css'
 
 function App() {
-  const [screen, setScreen] = useState('views')
+  const [screen, setScreen] = useState('ticket')
   const [selectedTickets, setSelectedTickets] = useState([])
   const [mergedTickets, setMergedTickets] = useState([])
   const [showNotification, setShowNotification] = useState(false)
