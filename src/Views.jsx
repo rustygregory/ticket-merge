@@ -241,7 +241,7 @@ const StatusBadge = styled.span`
   font-size: 11px;
   font-weight: 600;
   color: #fff;
-  background: ${props => props.$status === 'Open' ? '#e35b51' : '#f79a3e'};
+  background: ${props => props.$status === 'Open' ? '#e35b51' : props.$status === 'Pending' ? '#3b82c4' : '#f5a623'};
   text-transform: capitalize;
 `
 
@@ -308,12 +308,12 @@ const tickets = [
   { id: 21, subject: 'Refund all merch', status: 'Open', requester: 'Rodrigo De Conceição', date: 'May 05' },
   { id: 20, subject: 'Refund my merch', status: 'Open', requester: 'Rodrigo De Conceição', date: 'May 05' },
   { id: 19, subject: 'Refund the merch', status: 'Open', requester: 'Rodrigo De Conceição', date: 'May 05' },
-  { id: 18, subject: 'PDF test', status: 'New', requester: 'James Bond', date: 'May 04' },
+  { id: 18, subject: 'PDF test', status: 'Pending', requester: 'James Bond', date: 'May 04' },
   { id: 17, subject: 'Refund on merch', status: 'New', requester: 'Rusty Admin', date: 'Apr 20' },
   { id: 16, subject: 'PDF preview test', status: 'New', requester: 'W. Customer Wilson', date: 'Jan 27' },
-  { id: 15, subject: 'Checking in on Dinoco product', status: 'New', requester: 'Gus Gus', date: 'Jan 23' },
+  { id: 15, subject: 'Checking in on Dinoco product', status: 'Pending', requester: 'Gus Gus', date: 'Jan 23' },
   { id: 14, subject: 'Return order', status: 'New', requester: 'Gus Gus', date: 'Jan 23' },
-  { id: 13, subject: 'Refund issues', status: 'New', requester: 'W. Customer Wilson', date: 'Nov 13, 2025' },
+  { id: 13, subject: 'Refund issues', status: 'Open', requester: 'W. Customer Wilson', date: 'Nov 13, 2025' },
 ]
 
 function Views({ selectedTickets = [], setSelectedTickets, mergedTickets = [], onMerge, onTicketClick }) {

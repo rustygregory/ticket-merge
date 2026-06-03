@@ -23,17 +23,73 @@ const Panel = styled.div`
   box-shadow: -4px 0 16px rgba(0, 0, 0, 0.1);
 `
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 60px;
+  border-bottom: 1px solid #d8dcde;
+  flex-shrink: 0;
+`
+
+const HeaderTitle = styled.h1`
+  font-size: 14px;
+  font-weight: 600;
+  color: #2f3941;
+  margin: 0;
+`
+
+const CloseBtn = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #68737d;
+  font-size: 20px;
+  padding: 4px;
+  line-height: 1;
+
+  &:hover {
+    color: #2f3941;
+  }
+`
+
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
   padding: 20px;
 `
 
-const Title = styled.h1`
-  font-size: 22px;
-  font-weight: 500;
+const StepIndicator = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+`
+
+const StepText = styled.span`
+  font-size: 13px;
   color: #2f3941;
-  margin: 0 0 8px;
+  font-weight: 400;
+`
+
+const ProgressBar = styled.div`
+  display: flex;
+  gap: 4px;
+`
+
+const ProgressSegment = styled.div`
+  width: 40px;
+  height: 3.5px;
+  border-radius: 2px;
+  background: ${props => props.$active ? '#2f3941' : '#d8dcde'};
+`
+
+const Title = styled.h1`
+  font-size: 14px;
+  font-weight: 600;
+  color: #2f3941;
+  margin: 0;
 `
 
 const Subtitle = styled.p`
@@ -70,7 +126,7 @@ const TicketBadge = styled.span`
 `
 
 const SectionHint = styled.p`
-  font-size: 13px;
+  font-size: 14px;
   color: #68737d;
   margin: 0 0 12px;
 `
@@ -120,7 +176,7 @@ const DropdownMenu = styled.div`
 
 const DropdownItem = styled.div`
   padding: 10px 16px;
-  font-size: 13px;
+  font-size: 14px;
   color: #2f3941;
   cursor: pointer;
 
@@ -135,7 +191,7 @@ const ComposerBody = styled.textarea`
   padding: 0 16px 12px;
   border: none;
   outline: none;
-  font-size: 13px;
+  font-size: 14px;
   font-family: inherit;
   resize: none;
   color: #2f3941;
@@ -250,7 +306,7 @@ function ComposerDropdown({ value, onChange }) {
   )
 }
 
-function MergeModal({ sourceTickets, destinationTicket, onClose, onMerge }) {
+function MergeModal({ sourceTickets, destinationTicket, onClose, onMerge, hideStepper }) {
   const plural = sourceTickets.length > 1
   const destTitle = destinationTicket?.title || ''
   const destId = destinationTicket?.id
@@ -273,7 +329,21 @@ function MergeModal({ sourceTickets, destinationTicket, onClose, onMerge }) {
   return (
     <Scrim onClick={onClose}>
       <Panel onClick={(e) => e.stopPropagation()}>
+        <Header>
+          <HeaderTitle>Merge tickets</HeaderTitle>
+          <CloseBtn onClick={onClose}>×</CloseBtn>
+        </Header>
         <Content>
+          {!hideStepper && (
+            <StepIndicator>
+              <StepText>Step 2 of 2</StepText>
+              <ProgressBar>
+                <ProgressSegment $active />
+                <ProgressSegment $active />
+              </ProgressBar>
+            </StepIndicator>
+          )}
+
           <Title>Review merge</Title>
           <Subtitle>Review and add comments before merging.</Subtitle>
 

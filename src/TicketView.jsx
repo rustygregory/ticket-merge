@@ -646,7 +646,8 @@ const CancelButton = styled.button`
 
 const Footer = styled.div`
   border-top: 1px solid #d8dcde;
-  padding: 10px 20px;
+  height: 80px;
+  padding: 0 20px;
   display: flex;
   align-items: center;
   background: #fff;
@@ -774,6 +775,7 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
   const [showKebab, setShowKebab] = useState(false)
   const [showMergeDrawer, setShowMergeDrawer] = useState(false)
   const [drawerDestination, setDrawerDestination] = useState(null)
+  const [prevDestination, setPrevDestination] = useState(null)
 
   const availableTickets = mergeSuggestions.filter(t => !mergedTicketIds.includes(t.id))
 
@@ -1205,6 +1207,7 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
           destinationTicket={currentTicket}
           onClose={handleModalClose}
           onMerge={handleMergeConfirm}
+          hideStepper
         />
       )}
 
@@ -1215,6 +1218,7 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
               sourceTickets={[currentTicket.id]}
               onBack={() => setShowMergeDrawer(false)}
               onNext={(dest) => setDrawerDestination(dest)}
+              initialDestination={prevDestination}
             />
           </DrawerPanel>
         </DrawerScrim>
@@ -1224,10 +1228,11 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
         <MergeModal
           sourceTickets={[currentTicket.id]}
           destinationTicket={drawerDestination}
-          onClose={() => { setDrawerDestination(null); }}
+          onClose={() => { setPrevDestination(drawerDestination); setDrawerDestination(null); }}
           onMerge={() => {
             setShowMergeDrawer(false)
             setDrawerDestination(null)
+            setPrevDestination(null)
             onMergeComplete([currentTicket.id])
           }}
         />

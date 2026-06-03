@@ -17,6 +17,7 @@ function App() {
   const [mergedTicketIds, setMergedTicketIds] = useState([])
   const [showMergeStep1, setShowMergeStep1] = useState(false)
   const [mergeDestination, setMergeDestination] = useState(null)
+  const [prevMergeDestination, setPrevMergeDestination] = useState(null)
 
   const handleViewsMerge = () => {
     setShowMergeStep1(true)
@@ -33,14 +34,17 @@ function App() {
     setSelectedTickets([])
     setShowMergeStep1(false)
     setMergeDestination(null)
+    setPrevMergeDestination(null)
     setShowNotification(true)
   }
 
   const handleMergeBack = () => {
     if (mergeDestination) {
+      setPrevMergeDestination(mergeDestination)
       setMergeDestination(null)
     } else {
       setShowMergeStep1(false)
+      setPrevMergeDestination(null)
     }
   }
 
@@ -87,6 +91,7 @@ function App() {
               sourceTickets={selectedTickets}
               onBack={handleMergeBack}
               onNext={handleMergeNext}
+              initialDestination={prevMergeDestination}
             />
           </div>
         </div>
@@ -96,7 +101,7 @@ function App() {
         <MergeModal
           sourceTickets={selectedTickets}
           destinationTicket={mergeDestination}
-          onClose={() => setMergeDestination(null)}
+          onClose={() => { setPrevMergeDestination(mergeDestination); setMergeDestination(null); }}
           onMerge={handleMergeConfirm}
         />
       )}

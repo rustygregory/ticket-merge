@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react'
 import styled from 'styled-components'
-import { Alert } from '@zendeskgarden/react-notifications'
 import { Tooltip } from '@zendeskgarden/react-tooltips'
 
 const Container = styled.div`
@@ -22,7 +21,7 @@ const Header = styled.div`
 `
 
 const HeaderTitle = styled.h1`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #2f3941;
   margin: 0;
@@ -74,7 +73,7 @@ const ProgressSegment = styled.div`
 `
 
 const StepTitle = styled.h2`
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #2f3941;
   margin: 0 0 20px;
@@ -116,7 +115,7 @@ const MoreLinkWrapper = styled.div`
 `
 
 const MoreLink = styled.span`
-  font-size: 13px;
+  font-size: 14px;
   color: #1f73b7;
   cursor: pointer;
   display: inline-block;
@@ -127,14 +126,11 @@ const MoreLink = styled.span`
 `
 
 const MoreTooltip = styled.div`
-  position: absolute;
-  top: 50%;
-  right: calc(100% + 12px);
-  transform: translateY(-50%);
+  position: fixed;
   background: #2f3941;
   border-radius: 8px;
   padding: 16px;
-  z-index: 50;
+  z-index: 9999;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 
@@ -190,11 +186,11 @@ const FieldLabel = styled.h3`
   font-size: 14px;
   font-weight: 600;
   color: #2f3941;
-  margin: 24px 0 4px;
+  margin: 32px 0 4px;
 `
 
 const FieldHint = styled.p`
-  font-size: 13px;
+  font-size: 14px;
   color: #68737d;
   margin: 0 0 10px;
 `
@@ -323,8 +319,8 @@ const SuggestionsLabel = styled.span`
 `
 
 const SuggestionsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
 `
 
@@ -341,48 +337,40 @@ const SuggestionCard = styled.div`
   }
 `
 
-const CardTopRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 8px;
-`
-
 const CardStatusDot = styled.span`
-  width: 18px;
-  height: 18px;
+  width: 12px;
+  height: 12px;
   border-radius: 3px;
-  background: #e35b51;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 700;
-  color: #fff;
+  background: ${props => props.$color || '#e35b51'};
+  display: inline-block;
   flex-shrink: 0;
 `
 
-const CardTitle = styled.span`
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: #2f3941;
+const CardTitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
   margin-bottom: 4px;
 `
 
+const CardTitle = styled.span`
+  font-size: 14px;
+  font-weight: 600;
+  color: #2f3941;
+`
+
 const CardMeta = styled.span`
-  font-size: 12px;
+  font-size: 13px;
   color: #68737d;
 `
 
-const AlertWrapper = styled.div`
-  margin-bottom: 16px;
-`
 
 const Footer = styled.div`
   border-top: 1px solid #d8dcde;
   background: #fff;
-  padding: 16px 20px;
+  height: 80px;
+  padding: 0 20px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -404,7 +392,7 @@ const CancelBtn = styled.button`
 `
 
 const NextButton = styled.button`
-  background: #2f3941;
+  background: #1f73b7;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -414,7 +402,7 @@ const NextButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: #49545c;
+    background: #144a75;
   }
 `
 
@@ -466,35 +454,45 @@ const allTickets = [
 ]
 
 const suggestions = [
-  { id: 19, title: 'Refund the merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026' },
-  { id: 20, title: 'Refund my merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026' },
-  { id: 21, title: 'Refund all merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026' },
-  { id: 22, title: 'Refund that merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026' },
-  { id: 23, title: 'Refund merch', requester: 'Rodrigo De Conceição', date: 'May 5, 2026' },
-  { id: 24, title: 'Refund denied but item returned', requester: 'Rodrigo De Conceição', date: 'May 5, 2026' },
-  { id: 25, title: 'Refund request for gift order', requester: 'Rodrigo De Conceição', date: 'May 5, 2026' },
-  { id: 40, title: 'Double charged need refund', requester: 'Rodrigo De Conceição', date: 'May 7, 2026' },
-  { id: 41, title: 'Refund for damaged package', requester: 'Rodrigo De Conceição', date: 'May 7, 2026' },
-  { id: 42, title: 'Overcharged on last order', requester: 'Rodrigo De Conceição', date: 'May 7, 2026' },
-  { id: 43, title: 'Refund not showing on statement', requester: 'Rodrigo De Conceição', date: 'May 8, 2026' },
-  { id: 44, title: 'Refund for canceled event tickets', requester: 'Rodrigo De Conceição', date: 'May 8, 2026' },
+  { id: 19, title: 'Refund the merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026', status: 'Open' },
+  { id: 20, title: 'Refund my merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026', status: 'Open' },
+  { id: 21, title: 'Refund all merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026', status: 'Open' },
+  { id: 22, title: 'Refund that merch', requester: 'Rodrigo De Conceição', date: 'May 4, 2026', status: 'Open' },
+  { id: 23, title: 'Refund merch', requester: 'Rodrigo De Conceição', date: 'May 5, 2026', status: 'Open' },
+  { id: 24, title: 'Refund denied but item returned', requester: 'Rodrigo De Conceição', date: 'May 5, 2026', status: 'New' },
+  { id: 25, title: 'Refund request for gift order', requester: 'Rodrigo De Conceição', date: 'May 5, 2026', status: 'Pending' },
+  { id: 40, title: 'Double charged need refund', requester: 'Rodrigo De Conceição', date: 'May 7, 2026', status: 'Open' },
+  { id: 41, title: 'Refund for damaged package', requester: 'Rodrigo De Conceição', date: 'May 7, 2026', status: 'New' },
+  { id: 42, title: 'Overcharged on last order', requester: 'Rodrigo De Conceição', date: 'May 7, 2026', status: 'Pending' },
+  { id: 43, title: 'Refund not showing on statement', requester: 'Rodrigo De Conceição', date: 'May 8, 2026', status: 'Open' },
+  { id: 44, title: 'Refund for canceled event tickets', requester: 'Rodrigo De Conceição', date: 'May 8, 2026', status: 'New' },
 ]
 
-function MergeTickets({ sourceTickets, onBack, onNext }) {
-  const [selected, setSelected] = useState(null)
-  const [selectedCustom, setSelectedCustom] = useState(null)
+const recentlyViewed = [
+  { id: 30, title: 'Doc Hudson poster never arrived', requester: 'Sally Carrera', date: 'May 2, 2026', status: 'New' },
+  { id: 31, title: 'Shipping delay on bulk order', requester: 'Mater Tow', date: 'May 1, 2026', status: 'Pending' },
+  { id: 32, title: 'Wrong size Lightning McQueen tee', requester: 'Chick Hicks', date: 'Apr 28, 2026', status: 'Open' },
+  { id: 33, title: 'Missing item from order #8812', requester: 'Luigi Italiano', date: 'Apr 27, 2026', status: 'New' },
+]
+
+const statusColors = { New: '#f5a623', Open: '#e35b51', Pending: '#3b82c4' }
+
+function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
+  const [selected, setSelected] = useState(initialDestination?.id || null)
+  const [selectedCustom, setSelectedCustom] = useState(initialDestination?.title || null)
   const [searchValue, setSearchValue] = useState('')
   const [showDropdown, setShowDropdown] = useState(false)
   const [inputError, setInputError] = useState(null)
-  const [showAlert, setShowAlert] = useState(null)
   const [showMoreTooltip, setShowMoreTooltip] = useState(false)
+  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 })
   const inputRef = useRef(null)
+  const moreLinkRef = useRef(null)
 
   const sourceBrands = sourceTickets.map(id => allTickets.find(t => t.id === id)?.brand).filter(Boolean)
   const sourceBrand = sourceBrands[0]
 
   const selectedTicket = selected
-    ? suggestions.find(t => t.id === selected) || { id: selected, title: selectedCustom }
+    ? suggestions.find(t => t.id === selected) || recentlyViewed.find(t => t.id === selected) || { id: selected, title: selectedCustom }
     : null
 
   const checkBrandMismatch = (ticketId) => {
@@ -544,17 +542,14 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
       setSelected(null)
       setSelectedCustom(null)
       setInputError(null)
-      setShowAlert(null)
     } else {
       setSelected(id)
       setSelectedCustom(null)
       setSearchValue('')
       setShowDropdown(false)
       setInputError(null)
-      setShowAlert(null)
       if (checkBrandMismatch(id)) {
         setInputError('brand')
-        setShowAlert('brand')
       }
     }
   }
@@ -565,10 +560,8 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
     setSearchValue('')
     setShowDropdown(false)
     setInputError(null)
-    setShowAlert(null)
     if (checkBrandMismatch(ticket.id)) {
       setInputError('brand')
-      setShowAlert('brand')
     }
   }
 
@@ -578,13 +571,13 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
     setSearchValue('')
     setShowDropdown(false)
     setInputError(null)
-    setShowAlert(null)
     inputRef.current?.focus()
   }
 
   const visibleSource = sourceTickets.slice(0, 5)
   const remainingCount = sourceTickets.length - 5
   const availableSuggestions = suggestions.filter(t => !sourceTickets.includes(t.id)).slice(0, 4)
+  const availableRecent = recentlyViewed.filter(t => !sourceTickets.includes(t.id))
 
   return (
     <Container>
@@ -617,9 +610,15 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
           })}
           {remainingCount > 0 && (
             <MoreLinkWrapper>
-              <MoreLink onClick={() => setShowMoreTooltip(!showMoreTooltip)}>+{remainingCount} more</MoreLink>
+              <MoreLink ref={moreLinkRef} onClick={() => {
+                if (!showMoreTooltip && moreLinkRef.current) {
+                  const rect = moreLinkRef.current.getBoundingClientRect()
+                  setTooltipPos({ top: rect.top + rect.height / 2, left: rect.left - 12 })
+                }
+                setShowMoreTooltip(!showMoreTooltip)
+              }}>+{remainingCount} more</MoreLink>
               {showMoreTooltip && (
-                <MoreTooltip>
+                <MoreTooltip style={{ top: tooltipPos.top, left: tooltipPos.left, transform: 'translate(-100%, -50%)' }}>
                   <MoreTooltipTitle>Source tickets</MoreTooltipTitle>
                   <MoreTooltipGrid>
                     {sourceTickets.slice(5).map(id => {
@@ -638,25 +637,6 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
             </MoreLinkWrapper>
           )}
 
-          {showAlert === 'empty' && (
-            <AlertWrapper style={{ marginTop: 16 }}>
-              <Alert type="error">
-                <Alert.Title>Can't advance</Alert.Title>
-                <Alert.Paragraph>Search for a destination ticket or choose a suggestion to continue.</Alert.Paragraph>
-                <Alert.Close aria-label="Close" onClick={() => setShowAlert(null)} />
-              </Alert>
-            </AlertWrapper>
-          )}
-
-          {showAlert === 'brand' && (
-            <AlertWrapper style={{ marginTop: 16 }}>
-              <Alert type="error">
-                <Alert.Title>Can't merge different brands</Alert.Title>
-                <Alert.Paragraph>Select a ticket from the same brand.</Alert.Paragraph>
-                <Alert.Close aria-label="Close" onClick={() => setShowAlert(null)} />
-              </Alert>
-            </AlertWrapper>
-          )}
 
           <FieldLabel>Destination ticket* (required)</FieldLabel>
           <FieldHint>Search for a specific ticket or select a suggested ticket</FieldHint>
@@ -712,7 +692,7 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
             )}
           </InputContainer>
 
-          <SuggestionsLabel>{availableSuggestions.length} Suggestions</SuggestionsLabel>
+          <SuggestionsLabel>{availableSuggestions.length} from {availableSuggestions[0]?.requester || 'requester'}</SuggestionsLabel>
           <SuggestionsGrid>
             {availableSuggestions.map(ticket => (
               <SuggestionCard
@@ -720,12 +700,30 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
                 $active={selected === ticket.id}
                 onClick={() => handleCardClick(ticket.id)}
               >
-                <CardTopRow>
-                  <CardStatusDot>O</CardStatusDot>
-                  <TicketBadge>#{ticket.id}</TicketBadge>
-                </CardTopRow>
-                <CardTitle>{ticket.title}</CardTitle>
-                <CardMeta>{ticket.requester}<br/>{ticket.date}</CardMeta>
+                <TicketBadge>#{ticket.id}</TicketBadge>
+                <CardTitleRow>
+                  <CardStatusDot $color={statusColors[ticket.status]} />
+                  <CardTitle>{ticket.title}</CardTitle>
+                </CardTitleRow>
+                <CardMeta>{ticket.requester} &bull; {ticket.date}</CardMeta>
+              </SuggestionCard>
+            ))}
+          </SuggestionsGrid>
+
+          <SuggestionsLabel>{availableRecent.length} recently viewed tickets</SuggestionsLabel>
+          <SuggestionsGrid>
+            {availableRecent.map(ticket => (
+              <SuggestionCard
+                key={ticket.id}
+                $active={selected === ticket.id}
+                onClick={() => handleCardClick(ticket.id)}
+              >
+                <TicketBadge>#{ticket.id}</TicketBadge>
+                <CardTitleRow>
+                  <CardStatusDot $color={statusColors[ticket.status]} />
+                  <CardTitle>{ticket.title}</CardTitle>
+                </CardTitleRow>
+                <CardMeta>{ticket.requester} &bull; {ticket.date}</CardMeta>
               </SuggestionCard>
             ))}
           </SuggestionsGrid>
@@ -736,11 +734,9 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
         <NextButton onClick={() => {
           if (!selectedTicket) {
             setInputError('empty')
-            setShowAlert('empty')
             return
           }
           if (inputError === 'brand') {
-            setShowAlert('brand')
             return
           }
           onNext({ id: selectedTicket.id, title: selectedTicket.title || selectedCustom })
