@@ -46,36 +46,42 @@ const Content = styled.div`
   padding: 0 20px 20px;
 `
 
-const StepRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 20px;
-`
-
-const StepCircle = styled.div`
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: ${props => props.$active ? '#1f73b7' : '#e9ebed'};
-  color: ${props => props.$active ? '#fff' : '#68737d'};
+const StepIndicator = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+`
+
+const StepText = styled.span`
   font-size: 13px;
-  font-weight: 600;
-  flex-shrink: 0;
+  color: #2f3941;
+  font-weight: 400;
 `
 
-const StepLabel = styled.span`
-  font-size: 15px;
+const ProgressBar = styled.div`
+  display: flex;
+  gap: 4px;
+`
+
+const ProgressSegment = styled.div`
+  width: 40px;
+  height: 3.5px;
+  border-radius: 2px;
+  background: ${props => props.$active ? '#2f3941' : '#d8dcde'};
+`
+
+const Title = styled.h1`
+  font-size: 26px;
   font-weight: 500;
-  color: ${props => props.$active ? '#2f3941' : '#68737d'};
-  padding-top: 4px;
+  color: #2f3941;
+  margin: 0 0 8px;
 `
 
-const StepContent = styled.div`
-  padding-left: 40px;
+const Subtitle = styled.p`
+  font-size: 14px;
+  color: #68737d;
+  margin: 0 0 28px;
 `
 
 const SectionLabel = styled.h3`
@@ -126,16 +132,28 @@ const MoreLink = styled.span`
 
 const MoreTooltip = styled.div`
   position: absolute;
-  top: auto;
-  bottom: 100%;
-  left: 0;
-  margin-bottom: 8px;
+  top: 50%;
+  right: calc(100% + 12px);
+  transform: translateY(-50%);
   background: #2f3941;
   border-radius: 8px;
   padding: 16px;
   z-index: 50;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -6px;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid #2f3941;
+  }
 `
 
 const MoreTooltipTitle = styled.div`
@@ -147,7 +165,8 @@ const MoreTooltipTitle = styled.div`
 
 const MoreTooltipGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, auto);
+  grid-template-rows: repeat(5, auto);
+  grid-auto-flow: column;
   gap: 6px 24px;
 `
 
@@ -358,13 +377,6 @@ const CardTitle = styled.span`
 const CardMeta = styled.span`
   font-size: 12px;
   color: #68737d;
-`
-
-const Step2Row = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 28px;
 `
 
 const AlertWrapper = styled.div`
@@ -586,13 +598,18 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
       </Header>
 
       <Content>
-        <StepRow>
-          <StepCircle $active>1</StepCircle>
-          <StepLabel $active>Select destination ticket</StepLabel>
-        </StepRow>
+        <StepIndicator>
+          <StepText>Step 1 of 2</StepText>
+          <ProgressBar>
+            <ProgressSegment $active />
+            <ProgressSegment />
+          </ProgressBar>
+        </StepIndicator>
 
-        <StepContent>
-          <SectionLabel>Source tickets</SectionLabel>
+        <Title>Merge tickets</Title>
+        <Subtitle>Consolidate related tickets into a primary or suggested ticket.</Subtitle>
+
+        <SectionLabel>Source tickets</SectionLabel>
           {visibleSource.map(id => {
             const ticket = allTickets.find(t => t.id === id)
             if (!ticket) return null
@@ -717,12 +734,6 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
               </SuggestionCard>
             ))}
           </SuggestionsGrid>
-        </StepContent>
-
-        <Step2Row>
-          <StepCircle>2</StepCircle>
-          <StepLabel>Review and add comments</StepLabel>
-        </Step2Row>
       </Content>
 
       <Footer>
