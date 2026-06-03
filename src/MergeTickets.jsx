@@ -15,12 +15,14 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 20px 16px;
+  padding: 0 20px;
+  height: 60px;
+  border-bottom: 1px solid #d8dcde;
   flex-shrink: 0;
 `
 
 const HeaderTitle = styled.h1`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #2f3941;
   margin: 0;
@@ -43,14 +45,14 @@ const CloseBtn = styled.button`
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 0 20px 20px;
+  padding: 20px;
 `
 
 const StepIndicator = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 `
 
 const StepText = styled.span`
@@ -71,17 +73,11 @@ const ProgressSegment = styled.div`
   background: ${props => props.$active ? '#2f3941' : '#d8dcde'};
 `
 
-const Title = styled.h1`
-  font-size: 26px;
-  font-weight: 500;
+const StepTitle = styled.h2`
+  font-size: 15px;
+  font-weight: 600;
   color: #2f3941;
-  margin: 0 0 8px;
-`
-
-const Subtitle = styled.p`
-  font-size: 14px;
-  color: #68737d;
-  margin: 0 0 28px;
+  margin: 0 0 20px;
 `
 
 const SectionLabel = styled.h3`
@@ -606,8 +602,7 @@ function MergeTickets({ sourceTickets, onBack, onNext }) {
           </ProgressBar>
         </StepIndicator>
 
-        <Title>Merge tickets</Title>
-        <Subtitle>Consolidate related tickets into a primary or suggested ticket.</Subtitle>
+        <StepTitle>Select destination ticket</StepTitle>
 
         <SectionLabel>Source tickets</SectionLabel>
           {visibleSource.map(id => {
