@@ -36,10 +36,12 @@ const TicketTab = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #2f3941;
+  background: ${props => props.$active ? '#2f3941' : 'transparent'};
+  border: 1.5px solid ${props => props.$active ? '#2f3941' : '#87929d'};
   border-radius: 100px;
   padding: 6px 12px;
   margin-left: 8px;
+  cursor: pointer;
 `
 
 const TicketTabIcon = styled.span`
@@ -51,7 +53,7 @@ const TicketTabIcon = styled.span`
 `
 
 const TicketTabText = styled.span`
-  color: #fff;
+  color: ${props => props.$active ? '#fff' : '#2f3941'};
   font-size: 12px;
   font-weight: 500;
   line-height: 1.2;
@@ -67,7 +69,7 @@ const TicketTabDot = styled.span`
 const TicketTabClose = styled.button`
   background: none;
   border: none;
-  color: #87929d;
+  color: ${props => props.$active ? '#87929d' : '#68737d'};
   font-size: 14px;
   cursor: pointer;
   padding: 0;
@@ -76,7 +78,7 @@ const TicketTabClose = styled.button`
   align-items: center;
 
   &:hover {
-    color: #fff;
+    color: ${props => props.$active ? '#fff' : '#2f3941'};
   }
 `
 
@@ -140,7 +142,17 @@ const Avatar = styled.div`
   background: linear-gradient(135deg, #a855f7, #6366f1);
 `
 
-function TopBar({ onTabClose }) {
+const ticketNames = {
+  23: 'Refund merch', 22: 'Refund that merch', 21: 'Refund all merch',
+  20: 'Refund my merch', 19: 'Refund the merch', 18: 'PDF test',
+  17: 'Refund on merch', 16: 'PDF preview test', 15: 'Checking in on Dinoco product',
+  14: 'Return order', 13: 'Refund issues',
+}
+
+function TopBar({ onTabClose, screen, onTabClick, tabOpen, activeTicket }) {
+  const tabActive = screen === 'ticket'
+  const ticketLabel = activeTicket ? (ticketNames[activeTicket] || `Ticket`) : 'Refund merch'
+  const ticketId = activeTicket || 23
   return (
     <Bar>
       <ZendeskLogo viewBox="0 0 26 26" fill="none">
@@ -155,17 +167,19 @@ function TopBar({ onTabClose }) {
           <path d="M3 4.5l3 3 3-3" stroke="#2f3941" strokeWidth="1.5" strokeLinecap="round"/>
         </ChevronDown>
       </ProductName>
-      <TicketTab>
-        <TicketTabIcon>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#87929d" strokeWidth="1.5">
-            <circle cx="8" cy="8" r="6"/>
-            <path d="M8 5v3l2 2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </TicketTabIcon>
-        <TicketTabText>Refund merch<br/>#23</TicketTabText>
-        <TicketTabDot />
-        <TicketTabClose onClick={onTabClose}>×</TicketTabClose>
-      </TicketTab>
+      {tabOpen && (
+        <TicketTab $active={tabActive} onClick={onTabClick}>
+          <TicketTabIcon>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={tabActive ? '#87929d' : '#68737d'} strokeWidth="1.5">
+              <circle cx="8" cy="8" r="6"/>
+              <path d="M8 5v3l2 2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </TicketTabIcon>
+          <TicketTabText $active={tabActive}>{ticketLabel}<br/>#{ticketId}</TicketTabText>
+          <TicketTabDot />
+          <TicketTabClose $active={tabActive} onClick={(e) => { e.stopPropagation(); onTabClose(); }}>×</TicketTabClose>
+        </TicketTab>
+      )}
       <TabPlus>+</TabPlus>
       <Spacer />
       <SearchBox>

@@ -309,12 +309,28 @@ const InputError = styled.span`
   margin-top: 8px;
 `
 
+const OrgWarning = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff8ed;
+  border: 1px solid #f5c451;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+  height: 80px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #703815;
+  box-sizing: border-box;
+`
+
 const SuggestionsLabel = styled.span`
   display: block;
   font-size: 14px;
   font-weight: 400;
   color: #2f3941;
-  margin-top: 20px;
+  margin-top: 24px;
   margin-bottom: 12px;
 `
 
@@ -325,6 +341,7 @@ const SuggestionsGrid = styled.div`
 `
 
 const SuggestionCard = styled.div`
+  position: relative;
   border: 1.5px solid ${props => props.$active ? '#1f73b7' : '#d8dcde'};
   border-radius: 8px;
   padding: 12px;
@@ -335,6 +352,12 @@ const SuggestionCard = styled.div`
   &:hover {
     border-color: #1f73b7;
   }
+`
+
+const CheckIcon = styled.span`
+  position: absolute;
+  top: 12px;
+  right: 12px;
 `
 
 const CardStatusDot = styled.span`
@@ -469,15 +492,16 @@ const suggestions = [
 ]
 
 const recentlyViewed = [
-  { id: 30, title: 'Doc Hudson poster never arrived', requester: 'Sally Carrera', date: 'May 2, 2026', status: 'New' },
-  { id: 31, title: 'Shipping delay on bulk order', requester: 'Mater Tow', date: 'May 1, 2026', status: 'Pending' },
-  { id: 32, title: 'Wrong size Lightning McQueen tee', requester: 'Chick Hicks', date: 'Apr 28, 2026', status: 'Open' },
-  { id: 33, title: 'Missing item from order #8812', requester: 'Luigi Italiano', date: 'Apr 27, 2026', status: 'New' },
+  { id: 26, title: 'Refund went to wrong card', requester: 'Rodrigo De Conceição', date: 'May 3, 2026', status: 'Open' },
+  { id: 15, title: 'Checking in on Dinoco product', requester: 'Gus Gus', date: 'Apr 30, 2026', status: 'New' },
+  { id: 35, title: 'Refund subscription', requester: 'Sally Carrera', date: 'Apr 28, 2026', status: 'Pending' },
+  { id: 44, title: 'Refund for canceled event tickets', requester: 'Rodrigo De Conceição', date: 'Apr 26, 2026', status: 'New' },
+  { id: 14, title: 'Return order', requester: 'Gus Gus', date: 'Apr 25, 2026', status: 'Open' },
 ]
 
 const statusColors = { New: '#f5a623', Open: '#e35b51', Pending: '#3b82c4' }
 
-function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
+function MergeTickets({ sourceTickets, onBack, onNext, initialDestination, mergedTicketIds = [] }) {
   const [selected, setSelected] = useState(initialDestination?.id || null)
   const [selectedCustom, setSelectedCustom] = useState(initialDestination?.title || null)
   const [searchValue, setSearchValue] = useState('')
@@ -488,12 +512,19 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
   const inputRef = useRef(null)
   const moreLinkRef = useRef(null)
 
+  const sourceOrgs = sourceTickets.map(id => allTickets.find(t => t.id === id)?.org).filter(Boolean)
+  const sourceOrg = sourceOrgs[0]
   const sourceBrands = sourceTickets.map(id => allTickets.find(t => t.id === id)?.brand).filter(Boolean)
   const sourceBrand = sourceBrands[0]
 
   const selectedTicket = selected
     ? suggestions.find(t => t.id === selected) || recentlyViewed.find(t => t.id === selected) || { id: selected, title: selectedCustom }
     : null
+
+  const checkOrgMismatch = (ticketId) => {
+    const ticket = allTickets.find(t => t.id === ticketId)
+    return ticket && sourceOrg && ticket.org !== sourceOrg
+  }
 
   const checkBrandMismatch = (ticketId) => {
     const ticket = allTickets.find(t => t.id === ticketId)
@@ -550,6 +581,8 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
       setInputError(null)
       if (checkBrandMismatch(id)) {
         setInputError('brand')
+      } else if (checkOrgMismatch(id)) {
+        setInputError('org')
       }
     }
   }
@@ -562,6 +595,8 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
     setInputError(null)
     if (checkBrandMismatch(ticket.id)) {
       setInputError('brand')
+    } else if (checkOrgMismatch(ticket.id)) {
+      setInputError('org')
     }
   }
 
@@ -576,8 +611,8 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
 
   const visibleSource = sourceTickets.slice(0, 5)
   const remainingCount = sourceTickets.length - 5
-  const availableSuggestions = suggestions.filter(t => !sourceTickets.includes(t.id)).slice(0, 4)
-  const availableRecent = recentlyViewed.filter(t => !sourceTickets.includes(t.id))
+  const availableSuggestions = suggestions.filter(t => !sourceTickets.includes(t.id) && !mergedTicketIds.includes(t.id)).slice(0, 4)
+  const availableRecent = recentlyViewed.filter(t => !sourceTickets.includes(t.id) && !mergedTicketIds.includes(t.id))
 
   return (
     <Container>
@@ -641,7 +676,7 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
           <FieldLabel>Destination ticket* (required)</FieldLabel>
           <FieldHint>Search for a specific ticket or select a suggested ticket</FieldHint>
           <InputContainer>
-            <InputWrapper $error={!!inputError} onClick={() => !selected && inputRef.current?.focus()}>
+            <InputWrapper $error={inputError === 'empty' || inputError === 'brand'} onClick={() => !selected && inputRef.current?.focus()}>
               {selectedTicket ? (
                 <>
                   <InputBadge>#{selectedTicket.id}</InputBadge>
@@ -690,6 +725,16 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
                 Can't merge different brands
               </InputError>
             )}
+            {inputError === 'org' && (
+              <OrgWarning>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M10 2L1 18h18L10 2z" stroke="#b35900" strokeWidth="1.5" fill="none"/>
+                  <path d="M10 8v4" stroke="#b35900" strokeWidth="1.5" strokeLinecap="round"/>
+                  <circle cx="10" cy="14.5" r="0.75" fill="#b35900"/>
+                </svg>
+                These tickets belong to different organizations
+              </OrgWarning>
+            )}
           </InputContainer>
 
           <SuggestionsLabel>{availableSuggestions.length} from {availableSuggestions[0]?.requester || 'requester'}</SuggestionsLabel>
@@ -700,9 +745,14 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
                 $active={selected === ticket.id}
                 onClick={() => handleCardClick(ticket.id)}
               >
+                {selected === ticket.id && (
+                  <CheckIcon>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path strokeLinecap="round" strokeLinejoin="round" stroke="#1f73b7" d="M4 9l2.5 2.5 5-5"/><circle cx="7.5" cy="8.5" r="7" stroke="#1f73b7"/></svg>
+                  </CheckIcon>
+                )}
                 <TicketBadge>#{ticket.id}</TicketBadge>
                 <CardTitleRow>
-                  <CardStatusDot $color={statusColors[ticket.status]} />
+                  <Tooltip content={ticket.status}><CardStatusDot $color={statusColors[ticket.status]} /></Tooltip>
                   <CardTitle>{ticket.title}</CardTitle>
                 </CardTitleRow>
                 <CardMeta>{ticket.requester} &bull; {ticket.date}</CardMeta>
@@ -718,9 +768,14 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination }) {
                 $active={selected === ticket.id}
                 onClick={() => handleCardClick(ticket.id)}
               >
+                {selected === ticket.id && (
+                  <CheckIcon>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path strokeLinecap="round" strokeLinejoin="round" stroke="#1f73b7" d="M4 9l2.5 2.5 5-5"/><circle cx="7.5" cy="8.5" r="7" stroke="#1f73b7"/></svg>
+                  </CheckIcon>
+                )}
                 <TicketBadge>#{ticket.id}</TicketBadge>
                 <CardTitleRow>
-                  <CardStatusDot $color={statusColors[ticket.status]} />
+                  <Tooltip content={ticket.status}><CardStatusDot $color={statusColors[ticket.status]} /></Tooltip>
                   <CardTitle>{ticket.title}</CardTitle>
                 </CardTitleRow>
                 <CardMeta>{ticket.requester} &bull; {ticket.date}</CardMeta>

@@ -39,7 +39,7 @@ const BottomNav = styled.div`
   align-items: center;
 `
 
-function SideNav() {
+function SideNav({ screen, onViewsClick }) {
   return (
     <Nav>
       {/* Home */}
@@ -48,8 +48,8 @@ function SideNav() {
           <path d="M10 2.5L2 9h3v7h4v-4h2v4h4V9h3L10 2.5z"/>
         </svg>
       </NavItem>
-      {/* Messaging/chat - active (rounded square with speech bubble) */}
-      <NavItem $active>
+      {/* Views - active when on views screen */}
+      <NavItem $active={screen === 'views'} onClick={onViewsClick}>
         <svg width="20" height="20" viewBox="0 0 20 20">
           <path d="M4 3h12a2 2 0 012 2v8a2 2 0 01-2 2h-5l-4 3v-3H4a2 2 0 01-2-2V5a2 2 0 012-2z"/>
         </svg>

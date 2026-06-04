@@ -306,7 +306,7 @@ function ComposerDropdown({ value, onChange }) {
   )
 }
 
-function MergeModal({ sourceTickets, destinationTicket, onClose, onMerge, hideStepper }) {
+function MergeModal({ sourceTickets, destinationTicket, onClose, onDismiss, onMerge, hideStepper }) {
   const plural = sourceTickets.length > 1
   const destTitle = destinationTicket?.title || ''
   const destId = destinationTicket?.id
@@ -327,11 +327,11 @@ function MergeModal({ sourceTickets, destinationTicket, onClose, onMerge, hideSt
   const destVariant = destType === 'internal' ? 'note' : null
 
   return (
-    <Scrim onClick={onClose}>
+    <Scrim onClick={onDismiss || onClose}>
       <Panel onClick={(e) => e.stopPropagation()}>
         <Header>
           <HeaderTitle>Merge tickets</HeaderTitle>
-          <CloseBtn onClick={onClose}>×</CloseBtn>
+          <CloseBtn onClick={onDismiss || onClose}>×</CloseBtn>
         </Header>
         <Content>
           {!hideStepper && (

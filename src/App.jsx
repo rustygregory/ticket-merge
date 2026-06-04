@@ -9,7 +9,9 @@ import Shell from './Shell'
 import './App.css'
 
 function App() {
-  const [screen, setScreen] = useState('ticket')
+  const [screen, setScreen] = useState('views')
+  const [tabOpen, setTabOpen] = useState(false)
+  const [activeTicket, setActiveTicket] = useState(null)
   const [selectedTickets, setSelectedTickets] = useState([])
   const [mergedTickets, setMergedTickets] = useState([])
   const [showNotification, setShowNotification] = useState(false)
@@ -48,10 +50,16 @@ function App() {
     }
   }
 
-  const handleTicketMergeComplete = (ticketIds) => {
+  const handleTicketMergeComplete = (ticketIds, navigateToViews) => {
     setMergedTicketIds(prev => [...prev, ...ticketIds])
+    setMergedTickets(prev => [...prev, ...ticketIds])
     setLastMergeCount(ticketIds.length)
     setShowNotification(true)
+    if (navigateToViews) {
+      setTabOpen(false)
+      setActiveTicket(null)
+      setScreen('views')
+    }
   }
 
   useEffect(() => {
@@ -63,18 +71,19 @@ function App() {
 
   return (
     <ThemeProvider theme={DEFAULT_THEME}>
-      <Shell onTabClose={() => setScreen('views')}>
+      <Shell onTabClose={() => { setTabOpen(false); setScreen('views'); }} screen={screen} onTabClick={() => setScreen('ticket')} onViewsClick={() => setScreen('views')} tabOpen={tabOpen} activeTicket={activeTicket}>
         {screen === 'views' && (
           <Views
             selectedTickets={selectedTickets}
             setSelectedTickets={setSelectedTickets}
             mergedTickets={mergedTickets}
             onMerge={handleViewsMerge}
-            onTicketClick={() => setScreen('ticket')}
+            onTicketClick={(ticketId) => { setScreen('ticket'); setTabOpen(true); setActiveTicket(ticketId); }}
           />
         )}
         {screen === 'ticket' && (
           <TicketView
+            activeTicketId={activeTicket}
             onMergeComplete={handleTicketMergeComplete}
             mergedTicketIds={mergedTicketIds}
           />
@@ -102,6 +111,7 @@ function App() {
           sourceTickets={selectedTickets}
           destinationTicket={mergeDestination}
           onClose={() => { setPrevMergeDestination(mergeDestination); setMergeDestination(null); }}
+          onDismiss={() => { setShowMergeStep1(false); setMergeDestination(null); setPrevMergeDestination(null); }}
           onMerge={handleMergeConfirm}
         />
       )}

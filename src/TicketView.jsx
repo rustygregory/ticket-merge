@@ -210,11 +210,10 @@ const KebabMenuItem = styled.div`
   padding: 10px 16px;
   font-size: 14px;
   color: ${props => props.$red ? '#cc3340' : '#2f3941'};
-  cursor: ${props => props.$disabled ? 'default' : 'pointer'};
-  opacity: ${props => props.$disabled ? 0.4 : 1};
+  cursor: pointer;
 
   &:hover {
-    background: ${props => props.$disabled ? 'none' : '#f5f5f5'};
+    background: #f5f5f5;
   }
 `
 
@@ -767,9 +766,24 @@ const mergeSuggestions = [
   { id: 19, title: 'Refund the merch', subtitle: 'Refund the merch', date: 'May 5, 2026, 14:00:09' },
 ]
 
-const currentTicket = { id: 23, title: 'Refund merch' }
+const ticketData = {
+  23: { title: 'Refund merch', requester: 'Rodrigo De Conceição', status: 'Open' },
+  22: { title: 'Refund that merch', requester: 'Rodrigo De Conceição', status: 'Open' },
+  21: { title: 'Refund all merch', requester: 'Rodrigo De Conceição', status: 'Open' },
+  20: { title: 'Refund my merch', requester: 'Rodrigo De Conceição', status: 'Open' },
+  19: { title: 'Refund the merch', requester: 'Rodrigo De Conceição', status: 'Open' },
+  18: { title: 'PDF test', requester: 'James Bond', status: 'Pending' },
+  17: { title: 'Refund on merch', requester: 'Rusty Admin', status: 'New' },
+  16: { title: 'PDF preview test', requester: 'W. Customer Wilson', status: 'New' },
+  15: { title: 'Checking in on Dinoco product', requester: 'Gus Gus', status: 'Pending' },
+  14: { title: 'Return order', requester: 'Gus Gus', status: 'New' },
+  13: { title: 'Refund issues', requester: 'W. Customer Wilson', status: 'Open' },
+}
 
-function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
+function TicketView({ onMergeComplete, mergedTicketIds = [], activeTicketId }) {
+  const ticketId = activeTicketId || 23
+  const ticketInfo = ticketData[ticketId] || ticketData[23]
+  const currentTicket = { id: ticketId, title: ticketInfo.title }
   const [selectedIds, setSelectedIds] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [showKebab, setShowKebab] = useState(false)
@@ -797,7 +811,7 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
 
   const handleMergeConfirm = () => {
     setShowModal(false)
-    onMergeComplete(selectedIds)
+    onMergeComplete(selectedIds, false)
     setSelectedIds([])
   }
 
@@ -809,10 +823,10 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
     <Container>
       <TicketContextBar>
         <ContextTab>Email (create)</ContextTab>
-        <ContextName>Rodrigo De Conceição</ContextName>
+        <ContextName>{ticketInfo.requester}</ContextName>
         <ContextBadge>
-          <StatusTag>Open</StatusTag>
-          <TicketNumber>Ticket #23</TicketNumber>
+          <StatusTag>{ticketInfo.status}</StatusTag>
+          <TicketNumber>Ticket #{ticketId}</TicketNumber>
         </ContextBadge>
         <NextButton>
           Next
@@ -946,14 +960,14 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
                   </svg>
                   {showKebab && (
                     <KebabMenu onClick={(e) => e.stopPropagation()}>
-                      <KebabMenuItem $disabled>Create as macro</KebabMenuItem>
+                      <KebabMenuItem>Create as macro</KebabMenuItem>
                       <KebabMenuItem onClick={() => { setShowKebab(false); setShowMergeDrawer(true); }}>Merge into another ticket</KebabMenuItem>
-                      <KebabMenuItem $disabled>Print ticket</KebabMenuItem>
+                      <KebabMenuItem>Print ticket</KebabMenuItem>
                       <KebabDivider />
-                      <KebabMenuItem $red $disabled>Suspend user</KebabMenuItem>
-                      <KebabMenuItem $red $disabled>Mark as spam</KebabMenuItem>
+                      <KebabMenuItem $red>Suspend user</KebabMenuItem>
+                      <KebabMenuItem $red>Mark as spam</KebabMenuItem>
                       <KebabDivider />
-                      <KebabMenuItem $red $disabled>Delete</KebabMenuItem>
+                      <KebabMenuItem $red>Delete</KebabMenuItem>
                     </KebabMenu>
                   )}
                 </HeaderIcon>
@@ -1219,6 +1233,7 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
               onBack={() => setShowMergeDrawer(false)}
               onNext={(dest) => setDrawerDestination(dest)}
               initialDestination={prevDestination}
+              mergedTicketIds={mergedTicketIds}
             />
           </DrawerPanel>
         </DrawerScrim>
@@ -1229,11 +1244,12 @@ function TicketView({ onMergeComplete, mergedTicketIds = [] }) {
           sourceTickets={[currentTicket.id]}
           destinationTicket={drawerDestination}
           onClose={() => { setPrevDestination(drawerDestination); setDrawerDestination(null); }}
+          onDismiss={() => { setShowMergeDrawer(false); setDrawerDestination(null); setPrevDestination(null); }}
           onMerge={() => {
             setShowMergeDrawer(false)
             setDrawerDestination(null)
             setPrevDestination(null)
-            onMergeComplete([currentTicket.id])
+            onMergeComplete([currentTicket.id], true)
           }}
         />
       )}
