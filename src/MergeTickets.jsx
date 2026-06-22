@@ -357,8 +357,12 @@ const SuggestionCard = styled.div`
 
 const CheckIcon = styled.span`
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 0;
+  right: 0;
+  width: 26px;
+  height: 22px;
+  overflow: hidden;
+  border-top-right-radius: 7px;
 `
 
 const CardStatusDot = styled.span`
@@ -748,7 +752,7 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination, merge
               >
                 {selected === ticket.id && (
                   <CheckIcon>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path strokeLinecap="round" strokeLinejoin="round" stroke="#1f73b7" d="M4 9l2.5 2.5 5-5"/><circle cx="7.5" cy="8.5" r="7" stroke="#1f73b7"/></svg>
+                    <svg width="26" height="22" viewBox="0 0 26 22" fill="none"><path d="M0 0h26v22L0 0z" fill="#1f73b7"/><path d="M14 6l2.5 2.5 4.5-4.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </CheckIcon>
                 )}
                 <TicketBadge>#{ticket.id}</TicketBadge>
@@ -771,7 +775,7 @@ function MergeTickets({ sourceTickets, onBack, onNext, initialDestination, merge
               >
                 {selected === ticket.id && (
                   <CheckIcon>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path strokeLinecap="round" strokeLinejoin="round" stroke="#1f73b7" d="M4 9l2.5 2.5 5-5"/><circle cx="7.5" cy="8.5" r="7" stroke="#1f73b7"/></svg>
+                    <svg width="26" height="22" viewBox="0 0 26 22" fill="none"><path d="M0 0h26v22L0 0z" fill="#1f73b7"/><path d="M14 6l2.5 2.5 4.5-4.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </CheckIcon>
                 )}
                 <TicketBadge>#{ticket.id}</TicketBadge>
