@@ -343,6 +343,7 @@ const SuggestionsGrid = styled.div`
 const SuggestionCard = styled.div`
   position: relative;
   border: 1.5px solid ${props => props.$active ? '#1f73b7' : '#d8dcde'};
+  box-shadow: ${props => props.$active ? '0 0 0 0.5px #1f73b7' : 'none'};
   border-radius: 8px;
   padding: 12px;
   cursor: pointer;
